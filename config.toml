@@ -13,3 +13,4 @@ port=8860
 ##对长文章截断大小
 [chunk_size]
 chunk_size=8096
+min_szie =2000 #文章过短不切分
