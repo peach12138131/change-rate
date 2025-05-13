@@ -5,16 +5,16 @@ import toml
 import zipfile
 import tempfile
 import shutil
+import random
 from datetime import datetime
-from typing import Generator, List, Dict, Any, Optional
+from typing import Generator, List, Dict, Any, Optional, Tuple
 from pathlib import Path
 
-
 from decrease_aiRate import load_config, load_prompt, split_text, query_gpt_model, process_article
-from decrease_aiFiles import process_folder  #处理文件夹
+from decrease_aiFiles import process_folder  # 处理文件夹
+from multi_Articles import process_articles_multi  # 导入修改后的多文章处理函数
 
 def list_prompt_files(prompt_dir="./prompts/"):
-    
     prompt_files = []
     try:
         for file in os.listdir(prompt_dir):
@@ -26,17 +26,19 @@ def list_prompt_files(prompt_dir="./prompts/"):
         return []
 
 def get_prompt_display_names(prompt_files):
-    
     return [os.path.basename(file).replace(".toml", "") for file in prompt_files]
 
-
+def get_prompt_name_from_path(prompt_path, prompt_files, prompt_names):
+    """从prompt路径获取显示名称"""
+    if prompt_path in prompt_files:
+        index = prompt_files.index(prompt_path)
+        return prompt_names[index]
+    return os.path.basename(prompt_path).replace(".toml", "")
 
 def extract_zip_to_temp(zip_file):
     """将上传的ZIP文件解压到临时目录"""
-    # 创建临时目录
     temp_dir = tempfile.mkdtemp(prefix="ai_decrease_")
     
-    # 解压ZIP文件
     with zipfile.ZipFile(zip_file, 'r') as zip_ref:
         zip_ref.extractall(temp_dir)
     
@@ -89,8 +91,6 @@ def process_zip_file(zip_file, prompt_name, password):
         # 清理临时目录
         shutil.rmtree(temp_dir, ignore_errors=True)
         
-        # 返回处理结果信息和ZIP文件路径
-        result_message = f"处理完成! 成功: {result['success']}, 失败: {result['failed']}, 跳过: {result['skipped']}, 总计: {result['total']}"
         return output_zip
         
     except Exception as e:
@@ -135,6 +135,60 @@ def create_gradio_interface():
             all_results.append(chunk)
             yield "\n\n".join(all_results)
     
+    def process_multi_with_updates(article, num_articles, prompt_selections, random_prompt, password):
+        """处理文章分块，每个文章块在单独的文本框中显示，并指明使用的prompt风格"""
+        # 初始化结果列表（最多10个块）
+        results = [""] * 10
+        
+        if password != CORRECT_PASSWORD:
+            results[0] = "密码错误，无法处理文章。"
+            return results
+            
+        if not article:
+            results[0] = "请输入文章内容"
+            return results
+        
+        if not prompt_selections:
+            results[0] = "请至少选择一种文本风格"
+            return results
+        
+        # 获取选择的prompt路径和名称
+        selected_prompt_paths = []
+        for prompt_name in prompt_selections:
+            if prompt_name in prompt_names:
+                selected_index = prompt_names.index(prompt_name)
+                selected_prompt_paths.append(prompt_files[selected_index])
+        
+        if not selected_prompt_paths:
+            selected_prompt_paths = [prompt_files[0]]  # 默认使用第一个prompt
+        
+        # 初始化为等待处理状态
+        for i in range(num_articles):
+            results[i] = "等待处理..."
+        
+        # 使用多文章处理函数
+        for i, (chunk, prompt_path) in enumerate(process_articles_multi(
+            article=article,
+            num_articles=num_articles,
+            prompt_paths=selected_prompt_paths,
+            random_prompt=random_prompt
+        )):
+            if i < 10:  # 最多处理10个块
+                # 获取prompt的显示名称
+                style_name = get_prompt_name_from_path(prompt_path, prompt_files, prompt_names)
+                
+                # 更新对应位置的结果，包含风格信息
+                results[i] = f"【风格: {style_name}】\n\n{chunk}"
+                
+                # 实时更新UI
+                yield results
+        
+        # 处理完成后，将未使用的文本框清空
+        for i in range(num_articles, 10):
+            results[i] = ""
+            
+        yield results
+    
     # Gradio界面
     with gr.Blocks(title="Decrease AI Effect") as demo:
         gr.Markdown("# Decrease AI Effect")
@@ -149,17 +203,17 @@ def create_gradio_interface():
                 value=""  
             )
         
-        with gr.Row():
-            # 选择Prompt
-            prompt_dropdown = gr.Dropdown(
-                choices=prompt_names,
-                value=prompt_names[0] if prompt_names else None,
-                label="choose your style"
-            )
-        
         # 创建选项卡
         with gr.Tabs():
-            with gr.TabItem("文本处理"):
+            with gr.TabItem("单一风格处理"):
+                with gr.Row():
+                    # 选择Prompt
+                    prompt_dropdown = gr.Dropdown(
+                        choices=prompt_names,
+                        value=prompt_names[0] if prompt_names else None,
+                        label="选择文本风格"
+                    )
+                
                 with gr.Row():
                     # 输入文章
                     input_text = gr.Textbox(
@@ -200,12 +254,88 @@ def create_gradio_interface():
                     outputs=markdown_view
                 )
             
+            with gr.TabItem("多风格分块处理"):
+                with gr.Row():
+                    # 输入文章
+                    multi_input_text = gr.Textbox(
+                        lines=10, 
+                        placeholder="请输入你的文章...",
+                        label="输入文章"
+                    )
+                
+                with gr.Row():
+                    # 文章块数量选择
+                    num_articles_slider = gr.Slider(
+                        minimum=2, 
+                        maximum=10, 
+                        value=3, 
+                        step=1, 
+                        label="文章分块数量", 
+                        info="选择将文章分为几个块处理 (2-10)"
+                    )
+                    
+                    # 随机选择prompt选项
+                    random_prompt_checkbox = gr.Checkbox(
+                        label="随机分配文本风格", 
+                        value=False, 
+                        info="随机分配选定的文本风格到各个文章块"
+                    )
+                
+                with gr.Row():
+                    # 多选Prompt
+                    multi_prompt_dropdown = gr.Dropdown(
+                        choices=prompt_names,
+                        value=[prompt_names[0]] if prompt_names else None,
+                        label="选择一个或多个文本风格",
+                        multiselect=True,
+                        info="可以选择多种风格，系统会自动分配到各个文章块"
+                    )
+                
+                # 处理按钮
+                multi_process_button = gr.Button("开始多风格处理")
+                
+                # 创建文章块输出区域
+                article_chunks_output = []
+                
+                # 每行显示2个文本框，最多10个文本框
+                for row in range(5):  # 5行，每行2个
+                    with gr.Row():
+                        for col in range(2):  # 每行2列
+                            chunk_index = row * 2 + col
+                            chunk_output = gr.Textbox(
+                                lines=10, 
+                                label=f"文章块 {chunk_index + 1}",
+                                interactive=False
+                            )
+                            article_chunks_output.append(chunk_output)
+                
+                # 绑定事件 - 这里不使用列表嵌套，直接传递所有文本框
+                multi_process_button.click(
+                    fn=process_multi_with_updates,
+                    inputs=[
+                        multi_input_text, 
+                        num_articles_slider, 
+                        multi_prompt_dropdown, 
+                        random_prompt_checkbox, 
+                        password_input
+                    ],
+                    outputs=article_chunks_output
+                )
+            
             with gr.TabItem("批量处理 (ZIP文件)"):
                 with gr.Row():
                     # ZIP文件上传
                     zip_file_input = gr.File(
                         label="上传ZIP文件 (包含 .md 或 .txt 文件)",
                         file_types=[".zip"]
+                    )
+                
+                with gr.Row():
+                    # 选择单一Prompt用于ZIP处理
+                    zip_prompt_dropdown = gr.Dropdown(
+                        choices=prompt_names,
+                        value=prompt_names[0] if prompt_names else None,
+                        label="选择文本风格"
                     )
                 
                 # 处理ZIP按钮
@@ -217,7 +347,7 @@ def create_gradio_interface():
                 # 绑定事件
                 process_zip_button.click(
                     fn=process_zip_file,
-                    inputs=[zip_file_input, prompt_dropdown, password_input],
+                    inputs=[zip_file_input, zip_prompt_dropdown, password_input],
                     outputs=zip_result
                 )
         
