@@ -3,512 +3,302 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AVIGO Weekly Aviation Update</title>
+    <title>AVIGO Weekly Aviation Intelligence</title>
     <style>
-        body {
-            font-family: 'Helvetica Neue', Arial, sans-serif;
-            line-height: 1.6;
-            color: #555;
+        * {
             margin: 0;
             padding: 0;
-            background-color: #f9f9f9;
+            box-sizing: border-box;
         }
-        .container {
-            max-width: 600px;
-            margin: 0 auto;
-            background-color: #ffffff;
-        }
-        .header {
-            background-color: #2c3e50;
-            color: #ffffff;
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #2c3e50;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
             padding: 20px;
+        }
+        
+        .email-container {
+            max-width: 650px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            color: white;
+            padding: 40px 30px 30px;
             text-align: center;
+            position: relative;
         }
+        
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #3498db, #2980b9, #1abc9c);
+        }
+        
         .logo {
-            margin-bottom: 15px;
-        }
-        .logo h1 {
-            margin: 0;
+            font-size: 28px;
             font-weight: 300;
-            letter-spacing: 2px;
+            letter-spacing: 3px;
+            margin-bottom: 8px;
         }
+        
+        .date {
+            font-size: 14px;
+            opacity: 0.9;
+            font-weight: 300;
+        }
+        
         .content {
-            padding: 30px;
+            padding: 35px 30px;
         }
+        
+        .greeting {
+            font-size: 16px;
+            color: #2c3e50;
+            margin-bottom: 25px;
+            line-height: 1.5;
+        }
+        
         .section {
             margin-bottom: 30px;
         }
-        h2 {
+        
+        .section-title {
+            font-size: 18px;
+            font-weight: 600;
             color: #2c3e50;
-            font-weight: 400;
-            border-bottom: 1px solid #eee;
-            padding-bottom: 10px;
-            margin-top: 0;
+            margin-bottom: 15px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #ecf0f1;
         }
-        h3 {
-            color: #34495e;
-            font-weight: 400;
-        }
-        .data-visualization {
-            background-color: #f5f7fa;
+        
+        .market-insight {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
             padding: 20px;
-            border-radius: 5px;
-            margin: 25px 0;
-            text-align: center;
-        }
-        .chart-container {
-            margin: 20px 0;
-            height: 300px;
-        }
-        .warning {
-            background-color: #fdf2ef;
-            border-left: 4px solid #e74c3c;
-            padding: 15px;
-            margin-bottom: 20px;
-        }
-        .warning h3 {
-            color: #c0392b;
-            margin-top: 0;
-        }
-        .warning-list {
-            padding-left: 20px;
-        }
-        .warning-item {
-            margin-bottom: 8px;
-        }
-        .opportunity {
-            background-color: #eaf2f8;
+            border-radius: 8px;
             border-left: 4px solid #3498db;
-            padding: 15px;
             margin-bottom: 20px;
         }
-        .opportunity h3 {
-            color: #2980b9;
-            margin-top: 0;
+        
+        .highlight-stat {
+            font-size: 24px;
+            font-weight: 700;
+            color: #27ae60;
+            display: block;
         }
-        .cta-container {
-            text-align: center;
-            margin: 30px 0;
-        }
-        .cta-button {
-            display: inline-block;
-            background-color: #2c3e50;
-            color: white;
-            text-decoration: none;
-            padding: 12px 25px;
-            border-radius: 4px;
-            font-weight: 500;
-            transition: background-color 0.3s;
-        }
-        .cta-button:hover {
-            background-color: #1a252f;
-        }
-        .footer {
-            background-color: #f5f7fa;
+        
+        .stat-label {
+            font-size: 13px;
             color: #7f8c8d;
-            text-align: center;
-            padding: 20px;
-            font-size: 12px;
+            margin-top: 5px;
         }
-        .social-links {
+        
+        .alert-box {
+            background: linear-gradient(135deg, #fff5f5 0%, #fed7d7 100%);
+            border: 1px solid #feb2b2;
+            padding: 18px;
+            border-radius: 8px;
             margin: 15px 0;
         }
-        .social-links a {
-            margin: 0 10px;
-            color: #7f8c8d;
+        
+        .alert-title {
+            font-weight: 600;
+            color: #c53030;
+            margin-bottom: 8px;
+        }
+        
+        .opportunity-box {
+            background: linear-gradient(135deg, #f0fff4 0%, #c6f6d5 100%);
+            border: 1px solid #9ae6b4;
+            padding: 18px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+        
+        .opportunity-title {
+            font-weight: 600;
+            color: #22543d;
+            margin-bottom: 8px;
+        }
+        
+        .data-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .data-item {
+            text-align: center;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 6px;
+        }
+        
+        .data-value {
+            font-size: 18px;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+        
+        .data-change {
+            font-size: 12px;
+            margin-top: 5px;
+        }
+        
+        .positive { color: #27ae60; }
+        .negative { color: #e74c3c; }
+        
+        .cta-section {
+            background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 8px;
+            text-align: center;
+            margin: 25px 0;
+        }
+        
+        .cta-button {
+            display: inline-block;
+            background: rgba(255,255,255,0.2);
+            color: white;
+            padding: 12px 25px;
             text-decoration: none;
+            border-radius: 25px;
+            font-weight: 500;
+            margin-top: 15px;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255,255,255,0.3);
+        }
+        
+        .cta-button:hover {
+            background: rgba(255,255,255,0.3);
+            transform: translateY(-2px);
+        }
+        
+        .footer {
+            background: #2c3e50;
+            color: white;
+            padding: 25px 30px;
+            text-align: center;
+            font-size: 13px;
+        }
+        
+        .footer-links {
+            margin-bottom: 15px;
+        }
+        
+        .footer-links a {
+            color: #bdc3c7;
+            text-decoration: none;
+            margin: 0 15px;
+        }
+        
+        .footer-links a:hover {
+            color: white;
+        }
+        
+        @media (max-width: 600px) {
+            .data-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .content {
+                padding: 25px 20px;
+            }
+            
+            .header {
+                padding: 30px 20px 20px;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="container">
+    <div class="email-container">
         <div class="header">
-            <div class="logo">
-                <h1>AVIGO</h1>
-            </div>
-            <p>Weekly Aviation Intelligence Report | May 12-18, 2025</p>
+            <div class="logo">AVIGO</div>
+            <div class="date">Weekly Aviation Intelligence | May 23, 2025</div>
         </div>
         
         <div class="content">
-            <div class="section">
-                <h2>Market Insights</h2>
-                <p>Dear valued client,</p>
-                <p>The private aviation sector continues to show promising growth with the global chartered air transport market projected to reach <strong>$82.43 billion by 2029</strong>, representing a 6.4% CAGR. This week's data reveals significant developments that may impact your private flight planning.</p>
-                
-                <div class="data-visualization">
-                    <h3>Regional Flight Growth Trends</h3>
-                    <!-- IMAGE 1: Regional growth chart showing flight volume changes across regions -->
-                    <div class="chart-container">
-                        <!-- 区域增长图表 -->
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 400" style="max-width:100%">
-  <style>
-    .bar { opacity: 0.85; transition: opacity 0.3s; }
-    .bar:hover { opacity: 1; }
-    text { font-family: Arial, sans-serif; }
-    .title { font-size: 18px; fill: #2c3e50; font-weight: bold; }
-    .axis-label { font-size: 14px; fill: #7f8c8d; }
-    .tick text { font-size: 12px; fill: #7f8c8d; }
-    .data-label { font-size: 12px; fill: #fff; font-weight: bold; }
-    .legend text { font-size: 12px; fill: #7f8c8d; }
-  </style>
-  
-  <!-- Background -->
-  <rect width="600" height="400" fill="#f5f7fa" />
-  
-  <!-- Title -->
-  <text x="300" y="30" class="title" text-anchor="middle">Regional Flight Growth (Week-on-Week)</text>
-  
-  <!-- Chart Area -->
-  <g transform="translate(80, 60)">
-    <!-- Bars -->
-    <rect x="0" y="30" width="440" height="40" fill="#f1f1f1" />
-    <rect x="0" y="80" width="440" height="40" fill="#f9f9f9" />
-    <rect x="0" y="130" width="440" height="40" fill="#f1f1f1" />
-    <rect x="0" y="180" width="440" height="40" fill="#f9f9f9" />
-    <rect x="0" y="230" width="440" height="40" fill="#f1f1f1" />
-    
-    <!-- Middle line (0%) -->
-    <line x1="220" y1="10" x2="220" y2="280" stroke="#bdc3c7" stroke-width="1" stroke-dasharray="5,5" />
-    
-    <!-- Growth bars -->
-    <rect x="220" y="30" width="18" height="40" class="bar" fill="#3498db" />  <!-- Europe: +4.03% -->
-    <rect x="178" y="80" width="42" height="40" class="bar" fill="#e74c3c" />  <!-- North America: -9.16% -->
-    <rect x="220" y="130" width="13" height="40" class="bar" fill="#3498db" />  <!-- East Asia: +2.87% -->
-    <rect x="175" y="180" width="45" height="40" class="bar" fill="#e74c3c" />  <!-- Middle East: -10.13% -->
-    <rect x="220" y="230" width="4" height="40" class="bar" fill="#3498db" />  <!-- Other Regions: +0.91% -->
-    
-    <!-- Region labels -->
-    <text x="0" y="55" class="axis-label">Europe</text>
-    <text x="0" y="105" class="axis-label">North America</text>
-    <text x="0" y="155" class="axis-label">East Asia</text>
-    <text x="0" y="205" class="axis-label">Middle East</text>
-    <text x="0" y="255" class="axis-label">Other Regions</text>
-    
-    <!-- Growth percentage labels -->
-    <text x="244" y="55" class="data-label">+4.03%</text>
-    <text x="160" y="105" class="data-label">-9.16%</text>
-    <text x="239" y="155" class="data-label">+2.87%</text>
-    <text x="155" y="205" class="data-label">-10.13%</text>
-    <text x="230" y="255" class="data-label">+0.91%</text>
-    
-    <!-- X-axis labels -->
-    <text x="150" y="290" class="axis-label" text-anchor="middle">Decrease</text>
-    <text x="290" y="290" class="axis-label" text-anchor="middle">Increase</text>
-  </g>
-  
-  <!-- Legend -->
-  <g transform="translate(460, 350)">
-    <rect x="0" y="0" width="15" height="15" fill="#3498db" />
-    <text x="20" y="12" class="legend">Growth</text>
-    <rect x="80" y="0" width="15" height="15" fill="#e74c3c" />
-    <text x="100" y="12" class="legend">Decline</text>
-  </g>
-</svg>
-                    </div>
-                    <p><em>Notable shifts: Middle East (-10.13%) and North America (-9.16%) show significant declines, while Europe shows recovery at +4.03%</em></p>
-                </div>
+            <div class="greeting">
+                Dear Valued Partner,<br>
+                Navigate the skies with confidence using our latest market intelligence and operational insights.
             </div>
-
+            
             <div class="section">
-                <h2>Flight Activity Highlights</h2>
-                
-                <div class="data-visualization">
-                    <h3>Top Private Aviation Routes</h3>
-                    <!-- IMAGE 2: Bar chart of most popular routes -->
-                    <div class="chart-container">
-                        <!-- 热门航线图表 -->
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 400" style="max-width:100%">
-  <style>
-    .bar { opacity: 0.85; transition: opacity 0.3s; }
-    .bar:hover { opacity: 1; }
-    text { font-family: Arial, sans-serif; }
-    .title { font-size: 18px; fill: #2c3e50; font-weight: bold; }
-    .axis-label { font-size: 14px; fill: #7f8c8d; }
-    .tick text { font-size: 12px; fill: #7f8c8d; }
-    .data-label { font-size: 12px; fill: #2c3e50; }
-  </style>
-  
-  <!-- Background -->
-  <rect width="600" height="400" fill="#f5f7fa" />
-  
-  <!-- Title -->
-  <text x="300" y="30" class="title" text-anchor="middle">Top 5 Private Aviation Routes</text>
-  
-  <!-- Chart Area -->
-  <g transform="translate(150, 60)">
-    <!-- Bars -->
-    <rect x="0" y="0" width="257" height="40" class="bar" fill="#34495e" />
-    <rect x="0" y="50" width="245" height="40" class="bar" fill="#3498db" />
-    <rect x="0" y="100" width="197" height="40" class="bar" fill="#34495e" />
-    <rect x="0" y="150" width="172" height="40" class="bar" fill="#3498db" />
-    <rect x="0" y="200" width="171" height="40" class="bar" fill="#34495e" />
-    
-    <!-- Route labels -->
-    <text x="-10" y="25" class="axis-label" text-anchor="end">Dallas → Houston</text>
-    <text x="-10" y="75" class="axis-label" text-anchor="end">Houston → Dallas</text>
-    <text x="-10" y="125" class="axis-label" text-anchor="end">LA → Las Vegas</text>
-    <text x="-10" y="175" class="axis-label" text-anchor="end">Dallas → Austin</text>
-    <text x="-10" y="225" class="axis-label" text-anchor="end">Austin → Dallas</text>
-    
-    <!-- Flight count labels -->
-    <text x="267" y="25" class="data-label">257</text>
-    <text x="255" y="75" class="data-label">245</text>
-    <text x="207" y="125" class="data-label">197</text>
-    <text x="182" y="175" class="data-label">172</text>
-    <text x="181" y="225" class="data-label">171</text>
-  </g>
-  
-  <!-- X-axis label -->
-  <text x="300" y="320" class="axis-label" text-anchor="middle">Number of Flights (Weekly)</text>
-  
-  <!-- Description -->
-  <text x="300" y="350" class="axis-label" text-anchor="middle" font-style="italic">Texas routes dominate private aviation traffic</text>
-</svg>
-                    </div>
-                    <p><em>Dallas-Houston corridor remains the busiest private aviation route with 502 total flights</em></p>
+                <div class="section-title">Market Outlook</div>
+                <div class="market-insight">
+                    <span class="highlight-stat">$82.43B</span>
+                    <div class="stat-label">Global charter market projection by 2029 (6.4% CAGR)</div>
                 </div>
-                
-                <div class="data-visualization">
-                    <h3>Market Leaders in Private Aviation</h3>
-                    <!-- IMAGE 3: Pie chart showing market share of top airlines -->
-                    <div class="chart-container">
-                        <!-- 市场份额饼图 -->
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 400" style="max-width:100%">
-  <style>
-    text { font-family: Arial, sans-serif; }
-    .title { font-size: 18px; fill: #2c3e50; font-weight: bold; }
-    .subtitle { font-size: 14px; fill: #7f8c8d; }
-    .segment { transition: transform 0.2s; }
-    .segment:hover { transform: translateX(10px); }
-    .legend text { font-size: 12px; fill: #7f8c8d; }
-    .percentage { font-size: 12px; fill: #fff; font-weight: bold; }
-  </style>
-  
-  <!-- Background -->
-  <rect width="600" height="400" fill="#f5f7fa" />
-  
-  <!-- Title -->
-  <text x="300" y="30" class="title" text-anchor="middle">Market Leaders in Private Aviation</text>
-  <text x="300" y="50" class="subtitle" text-anchor="middle">Share of Total Flight Operations</text>
-  
-  <!-- Calculate total flights for percentages -->
-  <!-- Total flights = 1095174 + 851802 + 651378 + 647799 + 637062 = 3883215 -->
-  
-  <!-- Pie Chart -->
-  <g transform="translate(300, 200)">
-    <!-- Flexjet: 28.2% -->
-    <path d="M0,0 L150,0 A150,150 0 0,1 46.35,-142.66 z" class="segment" fill="#2c3e50" />
-    
-    <!-- Executive Jet Management: 21.9% -->
-    <path d="M0,0 L46.35,-142.66 A150,150 0 0,1 -46.35,-142.66 z" class="segment" fill="#3498db" />
-    
-    <!-- Wheels Up: 16.8% -->
-    <path d="M0,0 L-46.35,-142.66 A150,150 0 0,1 -142.66,-46.35 z" class="segment" fill="#e67e22" />
-    
-    <!-- Jet Linx: 16.7% -->
-    <path d="M0,0 L-142.66,-46.35 A150,150 0 0,1 -142.66,46.35 z" class="segment" fill="#16a085" />
-    
-    <!-- Solairus: 16.4% -->
-    <path d="M0,0 L-142.66,46.35 A150,150 0 0,1 -46.35,142.66 z" class="segment" fill="#9b59b6" />
-    
-    <!-- Labels inside pie -->
-    <text x="45" y="-45" class="percentage">28.2%</text>
-    <text x="-8" y="-105" class="percentage">21.9%</text>
-    <text x="-75" y="-75" class="percentage">16.8%</text>
-    <text x="-110" y="0" class="percentage">16.7%</text>
-    <text x="-80" y="85" class="percentage">16.4%</text>
-  </g>
-  
-  <!-- Legend -->
-  <g class="legend" transform="translate(80, 350)">
-    <rect x="0" y="0" width="12" height="12" fill="#2c3e50" />
-    <text x="18" y="10">Flexjet, LLC</text>
-    
-    <rect x="120" y="0" width="12" height="12" fill="#3498db" />
-    <text x="138" y="10">Executive Jet Management</text>
-    
-    <rect x="320" y="0" width="12" height="12" fill="#e67e22" />
-    <text x="338" y="10">Wheels Up</text>
-    
-    <rect x="420" y="0" width="12" height="12" fill="#16a085" />
-    <text x="438" y="10">Jet Linx</text>
-    
-    <rect x="220" y="25" width="12" height="12" fill="#9b59b6" />
-    <text x="238" y="35">Solairus Aviation</text>
-  </g>
-</svg>
-                    </div>
-                    <p><em>Flexjet, LLC continues to lead private aviation operations</em></p>
-                </div>
+                <p style="color: #5a6c7d; line-height: 1.6;">The private aviation sector continues its robust expansion, driven by increasing demand for flexible, premium travel solutions. This growth trajectory presents significant opportunities for strategic partnerships and route optimization.</p>
             </div>
-
+            
             <div class="section">
-                <h2>Regional Mobility Trends</h2>
-                <p>We're seeing significant growth in Middle East intra-regional flights (+16.13%) and strengthening Europe-Middle East connections (+10.34%), presenting new opportunities for business travelers.</p>
-                
-                <div class="data-visualization">
-                    <!-- IMAGE 4: Combined chart showing intra vs inter regional flight growth -->
-                    <div class="chart-container">
-                        <!-- 区域流动性趋势图表 -->
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 450" style="max-width:100%">
-  <style>
-    text { font-family: Arial, sans-serif; }
-    .title { font-size: 18px; fill: #2c3e50; font-weight: bold; }
-    .subtitle { font-size: 14px; fill: #7f8c8d; }
-    .axis-label { font-size: 12px; fill: #7f8c8d; }
-    .data-label { font-size: 11px; fill: #2c3e50; font-weight: bold; }
-    .bar { opacity: 0.85; transition: opacity 0.3s; }
-    .bar:hover { opacity: 1; }
-    .arrow-up { fill: #27ae60; }
-    .arrow-down { fill: #c0392b; }
-  </style>
-  
-  <!-- Background -->
-  <rect width="600" height="450" fill="#f5f7fa" />
-  
-  <!-- Title -->
-  <text x="300" y="30" class="title" text-anchor="middle">Regional Mobility Trends</text>
-  <text x="300" y="50" class="subtitle" text-anchor="middle">Week-on-Week Growth Rates (%)</text>
-  
-  <!-- Intra-regional Section -->
-  <g transform="translate(50, 80)">
-    <text x="0" y="0" class="subtitle" font-weight="bold">Intra-Regional Flights</text>
-    
-    <!-- Growth rate bars -->
-    <line x1="0" y1="30" x2="250" y2="30" stroke="#ddd" stroke-width="1" />
-    
-    <!-- Bars for growth rates -->
-    <rect x="125" y="40" width="12" height="20" class="bar" fill="#3498db" /> <!-- Europe: 3.48% -->
-    <rect x="95" y="70" width="30" height="20" class="bar" fill="#e74c3c" /> <!-- North America: -9.27% -->
-    <rect x="125" y="100" width="13" height="20" class="bar" fill="#3498db" /> <!-- East Asia: 3.59% -->
-    <rect x="125" y="130" width="57" height="20" class="bar" fill="#3498db" /> <!-- Middle East: 16.13% -->
-    <rect x="105" y="160" width="20" height="20" class="bar" fill="#e74c3c" /> <!-- Other Regions: -5.73% -->
-    
-    <!-- Region labels -->
-    <text x="0" y="55" class="axis-label">Europe</text>
-    <text x="0" y="85" class="axis-label">North America</text>
-    <text x="0" y="115" class="axis-label">East Asia</text>
-    <text x="0" y="145" class="axis-label">Middle East</text>
-    <text x="0" y="175" class="axis-label">Other Regions</text>
-    
-    <!-- Growth labels -->
-    <text x="143" y="55" class="data-label">+3.48%</text>
-    <text x="125" y="85" class="data-label">-9.27%</text>
-    <text x="144" y="115" class="data-label">+3.59%</text>
-    <text x="188" y="145" class="data-label">+16.13%</text>
-    <text x="125" y="175" class="data-label">-5.73%</text>
-    
-    <!-- Zero line -->
-    <line x1="125" y1="30" x2="125" y2="190" stroke="#bdc3c7" stroke-width="1" stroke-dasharray="5,5" />
-  </g>
-  
-  <!-- Inter-regional Section -->
-  <g transform="translate(320, 80)">
-    <text x="0" y="0" class="subtitle" font-weight="bold">Inter-Regional Flights</text>
-    
-    <!-- Growth rate bars -->
-    <line x1="0" y1="30" x2="250" y2="30" stroke="#ddd" stroke-width="1" />
-    
-    <!-- Bars for growth rates -->
-    <rect x="110" y="40" width="15" height="20" class="bar" fill="#e74c3c" /> <!-- NA-Europe: -4.26% -->
-    <rect x="125" y="70" width="3" height="20" class="bar" fill="#3498db" /> <!-- EA-SEA: 0.89% -->
-    <rect x="125" y="100" width="33" height="20" class="bar" fill="#3498db" /> <!-- NA-ME: 9.25% -->
-    <rect x="125" y="130" width="36" height="20" class="bar" fill="#3498db" /> <!-- Europe-ME: 10.34% -->
-    <rect x="125" y="160" width="2" height="20" class="bar" fill="#3498db" /> <!-- Other: 0.62% -->
-    
-    <!-- Region labels -->
-    <text x="0" y="55" class="axis-label">N.America-Europe</text>
-    <text x="0" y="85" class="axis-label">E.Asia-SE.Asia</text>
-    <text x="0" y="115" class="axis-label">N.America-M.East</text>
-    <text x="0" y="145" class="axis-label">Europe-M.East</text>
-    <text x="0" y="175" class="axis-label">Other Routes</text>
-    
-    <!-- Growth labels -->
-    <text x="130" y="55" class="data-label">-4.26%</text>
-    <text x="134" y="85" class="data-label">+0.89%</text>
-    <text x="164" y="115" class="data-label">+9.25%</text>
-    <text x="167" y="145" class="data-label">+10.34%</text>
-    <text x="133" y="175" class="data-label">+0.62%</text>
-    
-    <!-- Zero line -->
-    <line x1="125" y1="30" x2="125" y2="190" stroke="#bdc3c7" stroke-width="1" stroke-dasharray="5,5" />
-  </g>
-  
-  <!-- Key trends highlighted -->
-  <g transform="translate(50, 290)">
-    <text x="0" y="0" class="subtitle" font-weight="bold">Key Insights:</text>
-    
-    <!-- Middle East growth -->
-    <circle cx="10" cy="20" r="5" fill="#3498db" />
-    <text x="20" y="25" class="axis-label">Middle East intra-regional flights showing strongest growth (+16.13%)</text>
-    
-    <!-- Europe-ME connection -->
-    <circle cx="10" cy="45" r="5" fill="#3498db" />
-    <text x="20" y="50" class="axis-label">Europe-Middle East connections strengthening (+10.34%)</text>
-    
-    <!-- North America decline -->
-    <circle cx="10" cy="70" r="5" fill="#e74c3c" />
-    <text x="20" y="75" class="axis-label">North America showing significant decline (-9.27%)</text>
-    
-    <!-- Legend -->
-    <g transform="translate(170, 100)">
-      <rect x="0" y="0" width="15" height="15" fill="#3498db" />
-      <text x="20" y="12" class="axis-label">Growth</text>
-      
-      <rect x="100" y="0" width="15" height="15" fill="#e74c3c" />
-      <text x="120" y="12" class="axis-label">Decline</text>
-    </g>
-  </g>
-</svg>
+                <div class="section-title">Regional Flight Activity</div>
+                <div class="data-grid">
+                    <div class="data-item">
+                        <div class="data-value">Europe</div>
+                        <div class="data-change positive">+4.03% growth</div>
+                    </div>
+                    <div class="data-item">
+                        <div class="data-value">North America</div>
+                        <div class="data-change negative">-9.16% decline</div>
                     </div>
                 </div>
+                <p style="color: #5a6c7d; font-size: 14px; margin-top: 10px;">European markets show strong recovery momentum, while North American commercial disruptions create enhanced opportunities for private charter services.</p>
             </div>
-
+            
             <div class="section">
-                <h2>Critical Advisories</h2>
-                
-                <div class="warning">
-                    <h3>Current Flight Restrictions</h3>
-                    <p>Several regions are experiencing disruptions that may affect your travel plans:</p>
-                    <ul class="warning-list">
-                        <li class="warning-item"><strong>Eastern & Central USA:</strong> Severe weather systems causing flight restrictions</li>
-                        <li class="warning-item"><strong>Middle East:</strong> No-fly zones in place due to ongoing regional tensions</li>
-                        <li class="warning-item"><strong>Western Europe:</strong> Weather-related flight disruptions expected this week</li>
-                    </ul>
+                <div class="section-title">Critical Advisories</div>
+                <div class="alert-box">
+                    <div class="alert-title">Weather Impact</div>
+                    <p style="font-size: 14px; color: #742a2a;">Severe weather systems across Eastern US causing 1,100+ commercial flight cancellations. Private charter flexibility becomes essential for time-sensitive travel.</p>
                 </div>
-
-                <div>
-                    <h2>Exclusive Empty Leg Opportunities</h2>
-                <div class="opportunity">
-                    <h3>AVIGO Empty Leg Opportunities</h3>
-                    <p>With the current flight pattern shifts, we're seeing exceptional availability on select routes. Take advantage of premium aircraft at significant savings with our empty leg flights.</p>
-                </div>
-                
-                <div class="cta-container">
-                    <a href="https://marketplace.avi-go.com/empty-legs" class="cta-button">View Empty Leg Opportunities</a>
+                <div class="alert-box">
+                    <div class="alert-title">Airspace Restrictions</div>
+                    <p style="font-size: 14px; color: #742a2a;">Active no-fly zones in Eastern Europe, Middle East, and Iranian airspace. Route planning assistance available for affected itineraries.</p>
                 </div>
             </div>
             
             <div class="section">
-                <h2>Industry Innovations</h2>
-                <p>The industry continues to evolve with sustainable aviation solutions gaining momentum. German airline Evia Aero's plans to operate hydrogen-electric aircraft highlight the sector's shift toward greener alternatives, while the hybrid aircraft market is projected to reach $10.7 billion by 2033.</p>
+                <div class="section-title">Strategic Opportunity</div>
+                <div class="opportunity-box">
+                    <div class="opportunity-title">Empty Leg Advantages</div>
+                    <p style="font-size: 14px; color: #22543d;">With commercial aviation disruptions increasing, our empty leg inventory offers exceptional value for flexible travelers. Access premium aircraft at significant savings while maintaining schedule reliability.</p>
+                </div>
             </div>
             
-            <p>Our dedicated team is available to assist with your private aviation needs and provide tailored solutions for your upcoming travel plans.</p>
+            <div class="cta-section">
+                <h3 style="margin-bottom: 10px; font-weight: 300;">Exclusive Empty Leg Opportunities</h3>
+                <p style="font-size: 14px; opacity: 0.9; margin-bottom: 5px;">Discover premium flights at exceptional rates</p>
+                <a href="https://marketplace.avi-go.com/empty-legs" class="cta-button">Explore Empty Legs</a>
+            </div>
             
-            <p>Fly with confidence,</p>
-            <p>The AVIGO Team</p>
+            <div style="color: #7f8c8d; font-size: 13px; line-height: 1.5; margin-top: 25px;">
+                Our aviation intelligence team continues monitoring global developments to ensure optimal routing and cost efficiency for your travel requirements. For immediate assistance with route planning or charter inquiries, our concierge team remains available 24/7.
+            </div>
         </div>
         
         <div class="footer">
-            <div class="social-links">
-                <a href="#">LinkedIn</a> | 
-                <a href="#">Twitter</a> | 
-                <a href="#">Instagram</a>
+            <div class="footer-links">
+                <a href="#">Support</a>
+                <a href="#">Fleet</a>
+                <a href="#">Contact</a>
             </div>
-            <p>© 2025 AVIGO Aviation Services. All rights reserved.</p>
-            <p>You are receiving this email because you subscribed to AVIGO market intelligence reports.</p>
-            <p><a href="#">Unsubscribe</a> | <a href="#">Privacy Policy</a></p>
+            <p>&copy; 2025 AVIGO Aviation Services. Confidential business intelligence for authorized recipients only.</p>
         </div>
     </div>
 </body>
