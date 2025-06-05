@@ -13,6 +13,7 @@ from pathlib import Path
 from decrease_aiRate import load_config, load_prompt, split_text, query_gpt_model, process_article
 from decrease_aiFiles import process_folder  # 处理文件夹
 from multi_Articles import process_articles_multi  # 导入修改后的多文章处理函数
+from deep_research import send_research_request , extract_final_report  # 深度研究请求
 
 def list_prompt_files(prompt_dir="./prompts/"):
     prompt_files = []
@@ -95,6 +96,135 @@ def process_zip_file(zip_file, prompt_name, password):
         
     except Exception as e:
         return f"处理出错: {str(e)}"
+
+def research_and_process_single(query, prompt_name, password):
+    """执行深度研究并使用单一风格处理"""
+    if password != CORRECT_PASSWORD:
+        return "密码错误，无法处理文章。", ""
+    
+    if not query.strip():
+        return "请输入研究查询内容", ""
+    
+    # 获取选择的prompt路径
+    selected_index = prompt_names.index(prompt_name) if prompt_name in prompt_names else 0
+    prompt_path = prompt_files[selected_index]
+    
+    research_content = ""
+    processed_content = ""
+    
+    try:
+        # 第一步：执行深度研究
+        yield "正在进行深度研究...", ""
+        
+        for chunk in send_research_request(query):
+            research_content += chunk
+            yield f"【研究进行中】\n\n{research_content}", ""
+        
+        yield f"【研究完成】\n\n{research_content}", ""
+        
+        # 第二步：处理研究结果
+        if research_content.strip():
+            final_report_content = extract_final_report(research_content)
+    
+            if final_report_content != research_content:
+                yield f"【研究完成】\n\n{research_content}", f"正在处理最终报告内容... (已提取 {len(final_report_content)} 字符)"
+            else:
+                yield f"【研究完成】\n\n{research_content}", "正在处理研究结果..."
+            
+            all_results = []
+            for chunk in process_article(final_report_content, prompt_path=prompt_path):
+                all_results.append(chunk)
+                processed_result = "\n\n".join(all_results)
+                yield f"【研究完成】\n\n{research_content}", f"【处理结果】\n\n{processed_result}"
+        else:
+            yield f"【研究完成】\n\n{research_content}", "研究内容为空，无法进行处理"
+            
+    except Exception as e:
+        yield f"【研究内容】\n\n{research_content}", f"处理出错: {str(e)}"
+
+def research_and_process_multi(query, num_articles, prompt_selections, random_prompt, password):
+    """执行深度研究并使用多风格分块处理"""
+    # 初始化结果列表
+    results = [""] * 11  # 0-研究结果，1-10处理结果
+    
+    if password != CORRECT_PASSWORD:
+        results[0] = "密码错误，无法处理文章。"
+        return results
+    
+    if not query.strip():
+        results[0] = "请输入研究查询内容"
+        return results
+    
+    if not prompt_selections:
+        results[0] = "请至少选择一种文本风格"
+        return results
+    
+    # 获取选择的prompt路径
+    selected_prompt_paths = []
+    for prompt_name in prompt_selections:
+        if prompt_name in prompt_names:
+            selected_index = prompt_names.index(prompt_name)
+            selected_prompt_paths.append(prompt_files[selected_index])
+    
+    if not selected_prompt_paths:
+        selected_prompt_paths = [prompt_files[0]]
+    
+    research_content = ""
+    
+    try:
+        # 第一步：执行深度研究
+        results[0] = "正在进行深度研究..."
+        yield results
+        
+        for chunk in send_research_request(query):
+            research_content += chunk
+            results[0] = f"【研究进行中】\n\n{research_content}"
+            yield results
+        
+        results[0] = f"【研究完成】\n\n{research_content}"
+        yield results
+        
+        # 第二步：多风格分块处理
+        if research_content.strip():
+            # 初始化处理状态
+            for i in range(1, num_articles + 1):
+                results[i] = "等待处理..."
+            yield results
+            final_report_content = extract_final_report(research_content)
+
+            if final_report_content != research_content:
+                results[0] = f"【研究完成】\n\n{research_content}\n\n【提取最终报告】已提取 {len(final_report_content)} 字符用于处理"
+                yield results
+            
+            # 使用多文章处理函数
+            for i, (chunk, prompt_path) in enumerate(process_articles_multi(
+                article=final_report_content,
+                num_articles=num_articles,
+                prompt_paths=selected_prompt_paths,
+                random_prompt=random_prompt
+            )):
+                if i < 10:  # 最多处理10个块
+                    # 获取prompt的显示名称
+                    style_name = get_prompt_name_from_path(prompt_path, prompt_files, prompt_names)
+                    
+                    # 更新对应位置的结果，包含风格信息
+                    results[i + 1] = f"【风格: {style_name}】\n\n{chunk}"
+                    
+                    # 实时更新UI
+                    yield results
+            
+            # 处理完成后，将未使用的文本框清空
+            for i in range(num_articles + 1, 11):
+                results[i] = ""
+                
+        else:
+            results[1] = "研究内容为空，无法进行处理"
+            
+        yield results
+        
+    except Exception as e:
+        results[0] = f"处理出错: {str(e)}"
+        yield results
 
 def create_gradio_interface():
     global CORRECT_PASSWORD, prompt_files, prompt_names
@@ -320,6 +450,130 @@ def create_gradio_interface():
                         password_input
                     ],
                     outputs=article_chunks_output
+                )
+            
+            with gr.TabItem("深度研究 + 单一风格"):
+                with gr.Row():
+                    # 研究查询输入
+                    research_query_input = gr.Textbox(
+                        lines=3,
+                        placeholder="请输入研究主题或查询内容，例如：'人工智能的发展趋势'",
+                        label="研究查询",
+                        info="输入你想要深度研究的主题"
+                    )
+                
+                with gr.Row():
+                    # 选择处理风格
+                    research_prompt_dropdown = gr.Dropdown(
+                        choices=prompt_names,
+                        value=prompt_names[0] if prompt_names else None,
+                        label="选择处理风格",
+                        info="选择用于处理研究结果的文本风格"
+                    )
+                
+                # 处理按钮
+                research_process_button = gr.Button("开始深度研究 + 处理", variant="primary")
+                
+                with gr.Row():
+                    # 研究结果显示
+                    research_output = gr.Textbox(
+                        lines=12,
+                        label="研究结果 (实时更新)",
+                        interactive=False
+                    )
+                    
+                    # 处理结果显示
+                    research_processed_output = gr.Textbox(
+                        lines=12,
+                        label="处理结果 (实时更新)",
+                        interactive=False
+                    )
+                
+                # 绑定事件
+                research_process_button.click(
+                    fn=research_and_process_single,
+                    inputs=[research_query_input, research_prompt_dropdown, password_input],
+                    outputs=[research_output, research_processed_output]
+                )
+            
+            with gr.TabItem("深度研究 + 多风格分块"):
+                with gr.Row():
+                    # 研究查询输入
+                    research_multi_query_input = gr.Textbox(
+                        lines=3,
+                        placeholder="请输入研究主题或查询内容，例如：'气候变化的影响和解决方案'",
+                        label="研究查询",
+                        info="输入你想要深度研究的主题"
+                    )
+                
+                with gr.Row():
+                    # 文章块数量选择
+                    research_num_articles_slider = gr.Slider(
+                        minimum=2, 
+                        maximum=10, 
+                        value=3, 
+                        step=1, 
+                        label="文章分块数量", 
+                        info="选择将研究结果分为几个块处理 (2-10)"
+                    )
+                    
+                    # 随机选择prompt选项
+                    research_random_prompt_checkbox = gr.Checkbox(
+                        label="随机分配文本风格", 
+                        value=False, 
+                        info="随机分配选定的文本风格到各个文章块"
+                    )
+                
+                with gr.Row():
+                    # 多选Prompt
+                    research_multi_prompt_dropdown = gr.Dropdown(
+                        choices=prompt_names,
+                        value=[prompt_names[0]] if prompt_names else None,
+                        label="选择一个或多个文本风格",
+                        multiselect=True,
+                        info="可以选择多种风格，系统会自动分配到各个文章块"
+                    )
+                
+                # 处理按钮
+                research_multi_process_button = gr.Button("开始深度研究 + 多风格处理", variant="primary")
+                
+                # 研究结果显示区域
+                with gr.Row():
+                    research_multi_output = gr.Textbox(
+                        lines=10,
+                        label="研究结果 (实时更新)",
+                        interactive=False
+                    )
+                
+                # 创建文章块输出区域
+                research_article_chunks_output = []
+                
+                # 每行显示2个文本框，最多10个文本框
+                for row in range(5):  # 5行，每行2个
+                    with gr.Row():
+                        for col in range(2):  # 每行2列
+                            chunk_index = row * 2 + col
+                            chunk_output = gr.Textbox(
+                                lines=8, 
+                                label=f"处理结果 {chunk_index + 1}",
+                                interactive=False
+                            )
+                            research_article_chunks_output.append(chunk_output)
+                
+                # 将研究结果和处理结果合并为一个输出列表
+                research_multi_outputs = [research_multi_output] + research_article_chunks_output
+                
+                # 绑定事件
+                research_multi_process_button.click(
+                    fn=research_and_process_multi,
+                    inputs=[
+                        research_multi_query_input,
+                        research_num_articles_slider,
+                        research_multi_prompt_dropdown,
+                        research_random_prompt_checkbox,
+                        password_input
+                    ],
+                    outputs=research_multi_outputs
                 )
             
             with gr.TabItem("批量处理 (ZIP文件)"):
