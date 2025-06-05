@@ -2,20 +2,21 @@ import requests
 import json
 from datetime import datetime
 import os
+
 def send_research_request(query="defualt"):
     """向本地深度研究服务发送请求"""
     timestamp = datetime.now().strftime("%Y%m%d_%H%M")
     output_dir = "./temp_search_result"
     os.makedirs(output_dir, exist_ok=True)  # exist_ok=True 表示目录存在时不报错
-    filename = f"{output_dir}/weather_report_{timestamp}.txt"
+    filename = f"{output_dir}/deesearch_report_{timestamp}.txt"
     url = "http://47.237.119.79:8861/api/sse"
     ## http://47.237.119.79:8861/
     
     config = {
         "query": query,
         "provider": "anthropic",
-        "thinkingModel": "claude-3-7-sonnet-20250219",
-        "taskModel": "claude-3-7-sonnet-20250219",
+        "thinkingModel": "claude-sonnet-4-20250514",
+        "taskModel": "claude-sonnet-4-20250514",
         "searchProvider": "model",
         "language": "en-US",
         "maxResult": 5,
@@ -100,6 +101,31 @@ def send_research_request(query="defualt"):
     except Exception as e:
         print(f"❌ 其他错误: {e}")
 
+
+def extract_final_report(content):
+    """提取 <final-report> 和 </final-report> 之间的内容"""
+    start_tag = "<final-report>"
+    end_tag = "</final-report>"
+    
+    start_index = content.find(start_tag)
+    if start_index == -1:
+        print("没有找到 <final-report> 标签")
+        return content  # 如果没有找到标签，返回原内容
+    
+    end_index = content.find(end_tag, start_index)
+    if end_index == -1:
+        print("没有找到 </final-report> 标签")
+        return content  # 如果没有找到结束标签，返回原内容
+    
+    # 提取标签之间的内容
+    start_index += len(start_tag)
+    final_report = content[start_index:end_index].strip()
+    
+    return final_report
+
 if __name__ == "__main__":
     for x in send_research_request("上海天气,摘要"):
         continue
+
+
+   
