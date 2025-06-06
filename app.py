@@ -6,14 +6,21 @@ import zipfile
 import tempfile
 import shutil
 import random
+import asyncio
+import threading
+import queue
 from datetime import datetime
 from typing import Generator, List, Dict, Any, Optional, Tuple
 from pathlib import Path
+from concurrent.futures import ThreadPoolExecutor
 
 from decrease_aiRate import load_config, load_prompt, split_text, query_gpt_model, process_article
 from decrease_aiFiles import process_folder  # 处理文件夹
 from multi_Articles import process_articles_multi  # 导入修改后的多文章处理函数
 from deep_research import send_research_request , extract_final_report  # 深度研究请求
+
+# 全局线程池，支持多个并发任务
+executor = ThreadPoolExecutor(max_workers=8)  # 增加并发数
 
 def list_prompt_files(prompt_dir="./prompts/"):
     prompt_files = []
@@ -97,30 +104,65 @@ def process_zip_file(zip_file, prompt_name, password):
     except Exception as e:
         return f"处理出错: {str(e)}"
 
-def research_and_process_single(query, prompt_name, password):
-    """执行深度研究并使用单一风格处理"""
+def research_and_process_single_async(query, prompt_name, password):
+    """异步执行深度研究并使用单一风格处理 - 保持并发能力"""
     if password != CORRECT_PASSWORD:
-        return "密码错误，无法处理文章。", ""
+        yield "密码错误，无法处理文章。", ""
+        return
     
     if not query.strip():
-        return "请输入研究查询内容", ""
+        yield "请输入研究查询内容", ""
+        return
     
     # 获取选择的prompt路径
     selected_index = prompt_names.index(prompt_name) if prompt_name in prompt_names else 0
     prompt_path = prompt_files[selected_index]
     
-    research_content = ""
-    processed_content = ""
-    
     try:
-        # 第一步：执行深度研究
-        yield "正在进行深度研究...", ""
+        # 显示开始状态
+        yield "正在启动深度研究任务...", ""
         
-        for chunk in send_research_request(query):
-            research_content += chunk
-            yield f"【研究进行中】\n\n{research_content}", ""
+        # 使用队列进行线程间通信
+        result_queue = queue.Queue()
+        research_content = ""
         
-        yield f"【研究完成】\n\n{research_content}", ""
+        def research_worker():
+            """在单独线程中执行研究，通过队列传递结果"""
+            try:
+                content = ""
+                for chunk in send_research_request(query):
+                    content += chunk
+                    result_queue.put(("chunk", content))
+                result_queue.put(("done", content))
+            except Exception as e:
+                result_queue.put(("error", str(e)))
+        
+        # 提交研究任务到线程池
+        future = executor.submit(research_worker)
+        
+        # 实时获取研究进展
+        while True:
+            try:
+                # 非阻塞获取队列内容，超时0.1秒
+                msg_type, content = result_queue.get(timeout=0.1)
+                
+                if msg_type == "chunk":
+                    research_content = content
+                    yield f"【研究进行中】\n\n{research_content}", ""
+                elif msg_type == "done":
+                    research_content = content
+                    yield f"【研究完成】\n\n{research_content}", ""
+                    break
+                elif msg_type == "error":
+                    yield f"研究出错: {content}", ""
+                    return
+                    
+            except queue.Empty:
+                # 队列为空，继续等待
+                continue
+            except Exception as e:
+                yield f"处理出错: {str(e)}", ""
+                return
         
         # 第二步：处理研究结果
         if research_content.strip():
@@ -131,33 +173,42 @@ def research_and_process_single(query, prompt_name, password):
             else:
                 yield f"【研究完成】\n\n{research_content}", "正在处理研究结果..."
             
-            all_results = []
-            for chunk in process_article(final_report_content, prompt_path=prompt_path):
-                all_results.append(chunk)
-                processed_result = "\n\n".join(all_results)
-                yield f"【研究完成】\n\n{research_content}", f"【处理结果】\n\n{processed_result}"
+            # 异步处理文章
+            def do_process():
+                all_results = []
+                for chunk in process_article(final_report_content, prompt_path=prompt_path):
+                    all_results.append(chunk)
+                return "\n\n".join(all_results)
+            
+            future = executor.submit(do_process)
+            processed_result = future.result()
+            
+            yield f"【研究完成】\n\n{research_content}", f"【处理结果】\n\n{processed_result}"
         else:
             yield f"【研究完成】\n\n{research_content}", "研究内容为空，无法进行处理"
             
     except Exception as e:
-        yield f"【研究内容】\n\n{research_content}", f"处理出错: {str(e)}"
+        yield f"处理出错: {str(e)}", ""
 
-def research_and_process_multi(query, num_articles, prompt_selections, random_prompt, password):
-    """执行深度研究并使用多风格分块处理"""
+def research_and_process_multi_async(query, num_articles, prompt_selections, random_prompt, password):
+    """异步执行深度研究并使用多风格分块处理 - 保持并发能力"""
     # 初始化结果列表
     results = [""] * 11  # 0-研究结果，1-10处理结果
     
     if password != CORRECT_PASSWORD:
         results[0] = "密码错误，无法处理文章。"
-        return results
+        yield results
+        return
     
     if not query.strip():
         results[0] = "请输入研究查询内容"
-        return results
+        yield results
+        return
     
     if not prompt_selections:
         results[0] = "请至少选择一种文本风格"
-        return results
+        yield results
+        return
     
     # 获取选择的prompt路径
     selected_prompt_paths = []
@@ -169,20 +220,56 @@ def research_and_process_multi(query, num_articles, prompt_selections, random_pr
     if not selected_prompt_paths:
         selected_prompt_paths = [prompt_files[0]]
     
-    research_content = ""
-    
     try:
-        # 第一步：执行深度研究
-        results[0] = "正在进行深度研究..."
+        # 第一步：使用队列进行线程间通信的深度研究
+        results[0] = "正在启动深度研究任务..."
         yield results
         
-        for chunk in send_research_request(query):
-            research_content += chunk
-            results[0] = f"【研究进行中】\n\n{research_content}"
-            yield results
+        # 使用队列进行线程间通信
+        result_queue = queue.Queue()
+        research_content = ""
         
-        results[0] = f"【研究完成】\n\n{research_content}"
-        yield results
+        def research_worker():
+            """在单独线程中执行研究，通过队列传递结果"""
+            try:
+                content = ""
+                for chunk in send_research_request(query):
+                    content += chunk
+                    result_queue.put(("chunk", content))
+                result_queue.put(("done", content))
+            except Exception as e:
+                result_queue.put(("error", str(e)))
+        
+        # 提交研究任务到线程池
+        future = executor.submit(research_worker)
+        
+        # 实时获取研究进展
+        while True:
+            try:
+                # 非阻塞获取队列内容，超时0.1秒
+                msg_type, content = result_queue.get(timeout=0.1)
+                
+                if msg_type == "chunk":
+                    research_content = content
+                    results[0] = f"【研究进行中】\n\n{research_content}"
+                    yield results
+                elif msg_type == "done":
+                    research_content = content
+                    results[0] = f"【研究完成】\n\n{research_content}"
+                    yield results
+                    break
+                elif msg_type == "error":
+                    results[0] = f"研究出错: {content}"
+                    yield results
+                    return
+                    
+            except queue.Empty:
+                # 队列为空，继续等待
+                continue
+            except Exception as e:
+                results[0] = f"处理出错: {str(e)}"
+                yield results
+                return
         
         # 第二步：多风格分块处理
         if research_content.strip():
@@ -190,31 +277,38 @@ def research_and_process_multi(query, num_articles, prompt_selections, random_pr
             for i in range(1, num_articles + 1):
                 results[i] = "等待处理..."
             yield results
+            
             final_report_content = extract_final_report(research_content)
 
             if final_report_content != research_content:
                 results[0] = f"【研究完成】\n\n{research_content}\n\n【提取最终报告】已提取 {len(final_report_content)} 字符用于处理"
                 yield results
             
-            # 使用多文章处理函数
-            for i, (chunk, prompt_path) in enumerate(process_articles_multi(
-                article=final_report_content,
-                num_articles=num_articles,
-                prompt_paths=selected_prompt_paths,
-                random_prompt=random_prompt
-            )):
-                if i < 10:  # 最多处理10个块
-                    # 获取prompt的显示名称
-                    style_name = get_prompt_name_from_path(prompt_path, prompt_files, prompt_names)
-                    
-                    # 更新对应位置的结果，包含风格信息
-                    results[i + 1] = f"【风格: {style_name}】\n\n{chunk}"
-                    
-                    # 实时更新UI
-                    yield results
+            # 异步处理多个文章块
+            def do_multi_process():
+                processed_results = []
+                for i, (chunk, prompt_path) in enumerate(process_articles_multi(
+                    article=final_report_content,
+                    num_articles=num_articles,
+                    prompt_paths=selected_prompt_paths,
+                    random_prompt=random_prompt
+                )):
+                    if i < 10:  # 最多处理10个块
+                        style_name = get_prompt_name_from_path(prompt_path, prompt_files, prompt_names)
+                        processed_results.append(f"【风格: {style_name}】\n\n{chunk}")
+                return processed_results
+            
+            # 提交处理任务到线程池
+            future = executor.submit(do_multi_process)
+            processed_results = future.result()
+            
+            # 更新结果
+            for i, result_text in enumerate(processed_results):
+                if i + 1 < len(results):
+                    results[i + 1] = result_text
             
             # 处理完成后，将未使用的文本框清空
-            for i in range(num_articles + 1, 11):
+            for i in range(len(processed_results) + 1, 11):
                 results[i] = ""
                 
         else:
@@ -452,14 +546,14 @@ def create_gradio_interface():
                     outputs=article_chunks_output
                 )
             
-            with gr.TabItem("深度研究 + 单一风格"):
+            with gr.TabItem("深度研究 + 单一风格 "):
                 with gr.Row():
                     # 研究查询输入
                     research_query_input = gr.Textbox(
                         lines=3,
                         placeholder="请输入研究主题或查询内容",
                         label="研究查询",
-                        info="输入你想要深度研究的主题"
+                        info="输入你想要深度研究的主题 - 支持多用户并发"
                     )
                 
                 with gr.Row():
@@ -478,32 +572,32 @@ def create_gradio_interface():
                     # 研究结果显示
                     research_output = gr.Textbox(
                         lines=12,
-                        label="研究结果 (实时更新)",
+                        label="研究结果 (支持并发)",
                         interactive=False
                     )
                     
                     # 处理结果显示
                     research_processed_output = gr.Textbox(
                         lines=12,
-                        label="处理结果 (实时更新)",
+                        label="处理结果",
                         interactive=False
                     )
                 
                 # 绑定事件
                 research_process_button.click(
-                    fn=research_and_process_single,
+                    fn=research_and_process_single_async,
                     inputs=[research_query_input, research_prompt_dropdown, password_input],
                     outputs=[research_output, research_processed_output]
                 )
             
-            with gr.TabItem("深度研究 + 多风格分块"):
+            with gr.TabItem("深度研究 + 多风格分块 "):
                 with gr.Row():
                     # 研究查询输入
                     research_multi_query_input = gr.Textbox(
                         lines=3,
                         placeholder="请输入研究主题或查询内容",
                         label="研究查询",
-                        info="输入你想要深度研究的主题"
+                        info="输入你想要深度研究的主题 - 支持多用户并发"
                     )
                 
                 with gr.Row():
@@ -541,7 +635,7 @@ def create_gradio_interface():
                 with gr.Row():
                     research_multi_output = gr.Textbox(
                         lines=10,
-                        label="研究结果 (实时更新)",
+                        label="研究结果 (支持并发)",
                         interactive=False
                     )
                 
@@ -565,7 +659,7 @@ def create_gradio_interface():
                 
                 # 绑定事件
                 research_multi_process_button.click(
-                    fn=research_and_process_multi,
+                    fn=research_and_process_multi_async,
                     inputs=[
                         research_multi_query_input,
                         research_num_articles_slider,
@@ -605,9 +699,16 @@ def create_gradio_interface():
                     outputs=zip_result
                 )
         
-    # 启动Gradio应用
-    demo.queue()  # 支持流式输出
-    demo.launch(server_name="0.0.0.0", server_port=int(port))
+    # 启动Gradio应用 - 关键配置
+    demo.queue(
+        max_size=20,          # 最大队列大小
+        default_concurrency_limit=8   # 同时处理的任务数
+    )
+    demo.launch(
+        server_name="0.0.0.0", 
+        server_port=int(port),
+        max_threads=16        # 增加线程数
+    )
 
 if __name__ == "__main__":
     create_gradio_interface()
