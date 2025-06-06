@@ -320,9 +320,9 @@ def create_gradio_interface():
         yield results
     
     # Gradio界面
-    with gr.Blocks(title="Decrease AI Effect") as demo:
-        gr.Markdown("# Decrease AI Effect")
-        gr.Markdown("减少AI生成痕迹")
+    with gr.Blocks(title="Aeromind") as demo:
+        gr.Markdown("# Aeromind")
+        gr.Markdown("一站式文本AI生成系统")
         
         with gr.Row():
             # 密码输入框
@@ -457,7 +457,7 @@ def create_gradio_interface():
                     # 研究查询输入
                     research_query_input = gr.Textbox(
                         lines=3,
-                        placeholder="请输入研究主题或查询内容，例如：'人工智能的发展趋势'",
+                        placeholder="请输入研究主题或查询内容",
                         label="研究查询",
                         info="输入你想要深度研究的主题"
                     )
@@ -501,7 +501,7 @@ def create_gradio_interface():
                     # 研究查询输入
                     research_multi_query_input = gr.Textbox(
                         lines=3,
-                        placeholder="请输入研究主题或查询内容，例如：'气候变化的影响和解决方案'",
+                        placeholder="请输入研究主题或查询内容",
                         label="研究查询",
                         info="输入你想要深度研究的主题"
                     )
