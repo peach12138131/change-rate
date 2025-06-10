@@ -12,11 +12,22 @@ def send_research_request(query="defualt"):
     url = "http://47.237.119.79:8861/api/sse"
     ## http://47.237.119.79:8861/
     
+    # config = {
+    #     "query": query,
+    #     "provider": "anthropic",
+    #     "thinkingModel": "claude-sonnet-4-20250514",
+    #     "taskModel": "claude-sonnet-4-20250514",
+    #     "searchProvider": "model",
+    #     "language": "en-US",
+    #     "maxResult": 5,
+    #     "enableCitationImage": False,
+    #     "enableReferences": True
+    # }
     config = {
         "query": query,
-        "provider": "anthropic",
-        "thinkingModel": "claude-sonnet-4-20250514",
-        "taskModel": "claude-sonnet-4-20250514",
+        "provider": "openai",
+        "thinkingModel": "gpt-4.1-2025-04-14",
+        "taskModel": "gpt-4.1-2025-04-14",
         "searchProvider": "model",
         "language": "en-US",
         "maxResult": 5,
@@ -124,8 +135,12 @@ def extract_final_report(content):
     return final_report
 
 if __name__ == "__main__":
+    import time
+    start_time = time.time()
     for x in send_research_request("上海天气,摘要"):
         continue
 
+    end_time = time.time()
+    print(f"总耗时: {end_time - start_time:.2f} 秒")
 
    
