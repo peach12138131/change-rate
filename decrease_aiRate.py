@@ -127,6 +127,69 @@ def process_article(article: str, config_path: str = "./config.toml",
             print("等待10秒后处理下一块...")
             time.sleep(10)
 
+
+
+def process_article_deepsearch(article: str, config_path: str = "./config.toml", word_count: int = 1000,
+                   prompt_path: str = "./prompts/professional_Editor.toml") -> Generator[str, None, None]:
+    
+    # 加载配置
+    config = load_config(config_path)
+    llm_config = config.get("llm", {})
+    
+    
+    # 加载提示词
+    prompt = load_prompt(prompt_path)
+    if not prompt:
+        yield "提示词加载失败"
+        return
+    
+    prompt = prompt + f"\nPlease strictly limit the output to {word_count} words."
+    print(prompt)
+    
+   
+     # 重试配置
+    max_retries = 3
+    retry_count = 0
+    
+    while retry_count < max_retries:
+        try:
+            print(f"尝试处理文章 (第 {retry_count + 1} 次)")
+            
+            processed_chunk = query_gpt_model(
+                prompt=prompt,
+                article=article,
+                api_key=llm_config.get("api_key", ""),
+                base_url=llm_config.get("base_url", "https://api.anthropic.com/v1"),
+                model=llm_config.get("model", "claude-3-7-sonnet-20250219"),
+                max_tokens=llm_config.get("max_tokens", 8192),
+                temperature=llm_config.get("temperature", 0.0)
+            )
+            
+            # 如果处理成功，返回结果
+            if processed_chunk:
+                yield processed_chunk
+                return
+            else:
+                print(f"第 {retry_count + 1} 次处理返回空结果")
+                
+        except Exception as e:
+            print(f"第 {retry_count + 1} 次处理出现异常: {str(e)}")
+        
+        retry_count += 1
+        
+        # 如果还有重试机会，等待后重试
+        if retry_count < max_retries:
+            print(f"处理失败，将在10秒后进行第 {retry_count + 1} 次重试...")
+            time.sleep(10)
+        else:
+            print(f"达到最大重试次数 ({max_retries})，处理失败")
+    
+    # 所有重试都失败后，返回原文
+    print("所有重试均失败，返回原文")
+    yield article
+
+
+
 # 测试函数
 def test_process():
     # 创建一个测试文章
@@ -139,4 +202,10 @@ def test_process():
     print("\n处理结果摘要:")
     print(result[:500] + "...")  
 if __name__ == "__main__":
-    test_process()
+    # test_process()
+    test="""
+    <final-report>
+
+   """
+    for chunk in process_article_deepsearch(article=test,word_count=500):
+        print(chunk)
