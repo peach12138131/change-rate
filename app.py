@@ -14,7 +14,7 @@ from typing import Generator, List, Dict, Any, Optional, Tuple
 from pathlib import Path
 from concurrent.futures import ThreadPoolExecutor
 
-from decrease_aiRate import load_config, load_prompt, split_text, query_gpt_model, process_article
+from decrease_aiRate import load_config, load_prompt, split_text, query_gpt_model, process_article,process_article_deepsearch
 from decrease_aiFiles import process_folder  # 处理文件夹
 from multi_Articles import process_articles_multi  # 导入修改后的多文章处理函数
 from deep_research import send_research_request , extract_final_report  # 深度研究请求
@@ -104,7 +104,7 @@ def process_zip_file(zip_file, prompt_name, password):
     except Exception as e:
         return f"处理出错: {str(e)}"
 
-def research_and_process_single_async(query, prompt_name, password):
+def research_and_process_single_async(query, prompt_name, password,word_count=1000):
     """异步执行深度研究并使用单一风格处理 - 保持并发能力"""
     if password != CORRECT_PASSWORD:
         yield "密码错误，无法处理文章。", ""
@@ -176,7 +176,7 @@ def research_and_process_single_async(query, prompt_name, password):
             # 异步处理文章
             def do_process():
                 all_results = []
-                for chunk in process_article(final_report_content, prompt_path=prompt_path):
+                for chunk in process_article_deepsearch(final_report_content, prompt_path=prompt_path,word_count=word_count):
                     all_results.append(chunk)
                 return "\n\n".join(all_results)
             
@@ -416,7 +416,7 @@ def create_gradio_interface():
     # Gradio界面
     with gr.Blocks(title="Aeromind") as demo:
         gr.Markdown("# Aeromind")
-        gr.Markdown("一站式文本AI生成系统")
+        gr.Markdown("一站式文本AI生成系统 - 25.1.3")
         
         with gr.Row():
             # 密码输入框
@@ -564,7 +564,15 @@ def create_gradio_interface():
                         label="选择处理风格",
                         info="选择用于处理研究结果的文本风格"
                     )
-                
+                    # 字数选择
+                    word_count_slider = gr.Slider(
+                        minimum=500,
+                        maximum=10000,
+                        value=1000,
+                        step=500,
+                        label="目标字数",
+                        info="设置处理后文章的目标字数"
+                    )
                 # 处理按钮
                 research_process_button = gr.Button("开始深度研究 + 处理", variant="primary")
                 
@@ -572,7 +580,7 @@ def create_gradio_interface():
                     # 研究结果显示
                     research_output = gr.Textbox(
                         lines=12,
-                        label="研究结果 (支持并发)",
+                        label="研究结果 ",
                         interactive=False
                     )
                     
@@ -586,7 +594,7 @@ def create_gradio_interface():
                 # 绑定事件
                 research_process_button.click(
                     fn=research_and_process_single_async,
-                    inputs=[research_query_input, research_prompt_dropdown, password_input],
+                    inputs=[research_query_input, research_prompt_dropdown, password_input,word_count_slider],
                     outputs=[research_output, research_processed_output]
                 )
             
@@ -635,7 +643,7 @@ def create_gradio_interface():
                 with gr.Row():
                     research_multi_output = gr.Textbox(
                         lines=10,
-                        label="研究结果 (支持并发)",
+                        label="研究结果",
                         interactive=False
                     )
                 
