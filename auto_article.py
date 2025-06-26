@@ -348,8 +348,21 @@ def auto_write_article(news_list, api_key="", base_url="https://api.anthropic.co
         return None
 
 
+
+
 if __name__ == "__main__":
+    import schedule
+    import time
+    # 立即执行一次
     auto_write_article(news_list=keyword_list, api_key=claude_key)
+    
+    # 设置每天10点执行
+    schedule.every().day.at("10:00").do(auto_write_article, news_list=keyword_list, api_key=claude_key)
+    
+    # 保持运行
+    while True:
+        schedule.run_pending()
+        time.sleep(60)
     
  
     
