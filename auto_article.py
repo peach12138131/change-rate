@@ -2,12 +2,13 @@ import requests
 import json
 from datetime import datetime
 import os
+import random
 from typing import List, Dict, Any, Optional,Generator
 import time
-from auto_article_config import keyword_list,claude_key,tavily_key,generate_svg_prompt,rewrite_prompt,extract_svg_from_text
+from auto_article_config import keyword_list,claude_key,tavily_key,openai_key,generate_svg_prompt,rewrite_prompt,extract_svg_from_text, extract_final_report,news_schema
 
 def query_gpt_model(prompt: str, article: str, api_key: str, base_url: str = "https://api.anthropic.com/v1", 
-                   model: str = "claude-3-7-sonnet-20250219", max_tokens: int = 10240, 
+                   model: str = "claude-sonnet-4-20250514", max_tokens: int = 10240, 
                    temperature: float = 0.0) -> Optional[str]:
   
     url = f"{base_url}/messages"
@@ -44,6 +45,50 @@ def query_gpt_model(prompt: str, article: str, api_key: str, base_url: str = "ht
         return None
 
 
+
+def query_openai_model(prompt: str, article: str, api_key: str, base_url: str = "https://api.openai.com/v1", 
+                       model: str = "gpt-4.1-2025-04-14", max_tokens: int = 10240, 
+                       temperature: float = 0.8,json_schema: dict = None) -> Optional[str]:
+    
+    url = f"{base_url}/chat/completions"
+    headers = {
+        "Content-Type": "application/json",
+        "Authorization": f"Bearer {api_key}"
+    }
+    
+    payload = {
+        "model": model,
+        "messages": [
+            {"role": "user", "content": f"{prompt}\n here is article:\n{article}"}
+        ],
+        "temperature": temperature,
+        "max_tokens": max_tokens
+    }
+    
+    if json_schema:
+        payload["response_format"] = {
+            "type": "json_schema",
+            "json_schema": json_schema
+        }
+    
+    try:
+        response = requests.post(url, headers=headers, json=payload)
+        response.raise_for_status()
+        response_json = response.json()
+        if "choices" in response_json and len(response_json["choices"]) > 0:
+            text_content = response_json["choices"][0]["message"]["content"]
+            return text_content
+        else:
+            print("API返回内容格式异常")
+            return None
+    except requests.exceptions.RequestException as e:
+        print(f"API请求异常: {e}")
+        if hasattr(e, 'response') and hasattr(e.response, 'text'):
+            print(f"API错误响应: {e.response.text}")
+        return None
+
+
+
 def send_research_request(query="defualt"):
     """向本地深度研究服务发送请求"""
     timestamp = datetime.now().strftime("%Y%m%d_%H%M")
@@ -51,7 +96,7 @@ def send_research_request(query="defualt"):
     os.makedirs(output_dir, exist_ok=True)  # exist_ok=True 表示目录存在时不报错
     filename = f"{output_dir}/deesearch_report_{timestamp}.txt"
     url = "http://47.237.119.79:8861/api/sse"
-    ## http://47.237.119.79:8861/
+  
 
     # config = {
     #     "query": query,
@@ -96,7 +141,7 @@ def send_research_request(query="defualt"):
                 if line.startswith('event: '):
                     # 解析事件类型
                     current_event = line[7:].strip()
-                    print(f"\n[事件]: {current_event}")
+                    # print(f"\n[事件]: {current_event}")
 
                 elif line.startswith('data: '):
                     # 提取data部分
@@ -118,7 +163,7 @@ def send_research_request(query="defualt"):
                                 else:
                                     final_report += text_content
                                 last_content = text_content
-                                print(f"\n[文本内容]: {text_content}")
+                                # print(f"\n[文本内容]: {text_content}")
 
                                 yield text_content
 
@@ -155,30 +200,11 @@ def send_research_request(query="defualt"):
         print(f"[表情] 其他错误: {e}")
 
 
-def extract_final_report(content):
-    """提取 <final-report> 和 </final-report> 之间的内容"""
-    start_tag = "<final-report>"
-    end_tag = "</final-report>"
-    
-    start_index = content.find(start_tag)
-    if start_index == -1:
-        print("没有找到 <final-report> 标签")
-        return content  # 如果没有找到标签，返回原内容
-    
-    end_index = content.find(end_tag, start_index)
-    if end_index == -1:
-        print("没有找到 </final-report> 标签")
-        return content  # 如果没有找到结束标签，返回原内容
-    
-    # 提取标签之间的内容
-    start_index += len(start_tag)
-    final_report = content[start_index:end_index].strip()
-    
-    return final_report
 
 
 
-def search_news(tavily_api_key: str=tavily_key, query: str="", max_results: int = 20, days: int = 3, 
+
+def search_news(tavily_api_key: str=tavily_key, query: str="", max_results: int = 80, days: int = 3, 
                 search_depth: str = "basic", include_answer: bool = True) -> List[Dict[str, Any]]:
     """
     使用Tavily API搜索新闻
@@ -233,13 +259,14 @@ def search_news(tavily_api_key: str=tavily_key, query: str="", max_results: int 
         results = result.get("results", [])
         answer = result.get("answer", "")  # AI生成的答案摘要
         
-        print(f"✅ 找到 {len(results)} 条新闻结果")
+        print(f"✅ 找到 {len(results)} 条新闻结果\n")
+        print(results)
         
         # 如果包含AI答案摘要，打印出来
         if include_answer and answer:
             print(f"📝 AI摘要: {answer[:]}...")
         
-        return answer
+        return answer,results
         
     except requests.exceptions.Timeout:
         print("❌ 请求超时，请检查网络连接")
@@ -262,15 +289,14 @@ def search_news(tavily_api_key: str=tavily_key, query: str="", max_results: int 
 
 
 
-def auto_write_article(news_list, api_key="", base_url="https://api.anthropic.com/v1"):
+def auto_write_article(news_list):
     """自动写文章的主函数"""
     
     
     try:
         news_list=news_list 
-        all_research_content = ""
-        # 对每条进行深度搜素
-        # 对每条进行深度搜索并生成单独文章
+       
+        # 对每条进行深度搜素,对每条进行深度搜索并生成单独文章
         for i, news in enumerate(news_list, 1): 
             category = news.get("category", "")
             keyword = news.get("keyword_en", "")
@@ -280,28 +306,44 @@ def auto_write_article(news_list, api_key="", base_url="https://api.anthropic.co
             print(f"内容: {description}")
 
             #获取实时新闻主题
-            topic=search_news(query=f"Search for recent news and analysis about::{category},keyword:{keyword},description:{description}Please find relevant news articles, expert opinions, and background information.")
+            topic,news_results=search_news(query=f"Search for diversity news releated to private jet (or business charter) about:{category},keyword:{keyword}Please find relevant news articles, expert opinions, and background information.")
 
-            # 构建研究查询
-            query = f"Please research the related information and related news about this news topic: {topic}"
+            print(f"主题: {news_results}")
+
+            extract_query =f"Please extract the news that most relevant to private charter topic about:{category},{description} from the following news results.Note:1.the content should be related 2.Try choose diverse sources"
+
+            extract_news = query_openai_model(extract_query,news_results,openai_key,json_schema=news_schema)
+            print(f"提取的新闻: {extract_news}")
+
+            # # 构建研究查询
+            # query = f"Please research the related information and related news releated to private jet (or business charter) about this news topic: {news_results}"
             
-            # 进行深度研究
-            print("[表情] 开始深度研究...")
-            research_content = ""
-            for content_chunk in send_research_request(query=query):
-                research_content += content_chunk
+            # # 进行深度研究
+            # print("[表情] 开始深度研究...")
+            # research_content = ""
+            # for content_chunk in send_research_request(query=query):
+            #     research_content += content_chunk
             
-            if research_content:
+            # 
+            if extract_news:
                 # 提取最终报告
-                final_report = extract_final_report(research_content)
+                # final_report = extract_final_report(research_content)
+                final_report = extract_news
                 
                 # 构建单篇文章内容
-                article_content = f"# {category}\n\n## 原始新闻内容\n{description}\n\n## 深度研究报告\n{final_report}"
+                article_content = f"# {category}\n\n## description\n{description}\n\n## the research material and collected news \n{final_report}"
                 time.sleep(10)
                 
                 # 调用API改写文章
-                print(f"[表情] 正在生成第 {i} 条新闻的文章...")
-                rewritten_article = query_gpt_model(rewrite_prompt, article_content, api_key, base_url)
+                print(f" 正在生成第 {i} 条新闻的文章...")
+                if random.choice([True, False]):
+                    rewritten_article = query_gpt_model(rewrite_prompt, article_content, claude_key, temperature=1.0)
+                    model_used = "claude"
+                else:
+                    rewritten_article = query_openai_model(rewrite_prompt, article_content, openai_key, temperature=1.0)
+                    model_used = "OpenAI"
+
+                print(f"[表情] 使用了 {model_used} 模型")
                 time.sleep(10)
                 
                 if rewritten_article:
@@ -320,7 +362,7 @@ def auto_write_article(news_list, api_key="", base_url="https://api.anthropic.co
                     with open(filename, 'w', encoding='utf-8') as f:
                         f.write(rewritten_article)
 
-                    svg_text = query_gpt_model(generate_svg_prompt, rewritten_article, api_key, base_url)
+                    svg_text = query_gpt_model(generate_svg_prompt, rewritten_article, claude_key)
                     time.sleep(10)
                     svg_codes=extract_svg_from_text(svg_text)
                     # 保存SVG文件 - 关键代码就这几行
@@ -348,17 +390,15 @@ def auto_write_article(news_list, api_key="", base_url="https://api.anthropic.co
         return None
 
 
-
-
 if __name__ == "__main__":
     import schedule
     import time
     # 立即执行一次
-    auto_write_article(news_list=keyword_list, api_key=claude_key)
-    
+    auto_write_article(news_list=keyword_list)
+
     # 设置每天10点执行
-    schedule.every().day.at("10:00").do(auto_write_article, news_list=keyword_list, api_key=claude_key)
-    
+    schedule.every().day.at("10:00").do(auto_write_article, news_list=keyword_list)
+
     # 保持运行
     while True:
         schedule.run_pending()
