@@ -5,7 +5,6 @@ import html
 
 
 
-
 generate_svg_prompt=""""
     Please analyze the main content of this article, focusing on its narrative logic, data usage, and event trend changes. Create SVG illustrations that match this article, with requirements for a concise illustration style, refined text, no unnecessary text symbols, and colors that align with the simple and elegant style of the private jet industry. Output 1 SVG image based on the content. This is the article:
    
@@ -45,11 +44,32 @@ Please recreate this content as an authentic human website article editor.
 keyword_list = [
     # 会员制与所有权模式
     {
+        "category": "Technology Innovation & Digital",
+        "keyword_en": "AI flight optimization private jets, artificial intelligence aviation, machine learning flight planning, automated charter booking, smart aircraft systems",
+        "keyword_zh": "AI航班优化私人飞机",
+        "priority": "Medium",
+        "description": "Technology disruptions transforming charter operations"
+    },
+    {
         "category": "Membership & Ownership Models",
         "keyword_en": "Jet card programs, prepaid flight hours, membership aviation, flight card benefits, charter membership plans",
         "keyword_zh": "飞行卡",
         "priority": "High",
         "description": "Strong branded keyword, long-term client interest"
+    },
+    {
+        "category": "Luxury Travel Destinations",
+        "keyword_en": "Private island resort, exclusive island getaway, luxury island destination, secluded tropical resort, UHNW island travel",
+        "keyword_zh": "私人岛屿度假村",
+        "priority": "Medium-High",
+        "description": "Appeals to UHNWIs seeking luxury experiences"
+    },
+    {
+        "category": "Specialized Travel Markets",
+        "keyword_en": "Destination wedding travel, luxury wedding flights, bridal party charter, wedding guest transport, celebration jet rental",
+        "keyword_zh": "目的地婚礼",
+        "priority": "Medium-High",
+        "description": "Niche but emotionally resonant travel segment"
     },
     {
         "category": "Membership & Ownership Models",
@@ -114,13 +134,7 @@ keyword_list = [
     },
     
     # 高端旅游目的地
-    {
-        "category": "Luxury Travel Destinations",
-        "keyword_en": "Private island resort, exclusive island getaway, luxury island destination, secluded tropical resort, UHNW island travel",
-        "keyword_zh": "私人岛屿度假村",
-        "priority": "Medium-High",
-        "description": "Appeals to UHNWIs seeking luxury experiences"
-    },
+    
     {
         "category": "Luxury Travel Destinations",
         "keyword_en": "Ultra-luxury resort, five-star resort destination, premium hospitality, exclusive resort access, luxury accommodation packages",
@@ -130,13 +144,7 @@ keyword_list = [
     },
     
     # 专业旅游细分市场
-    {
-        "category": "Specialized Travel Markets",
-        "keyword_en": "Destination wedding travel, luxury wedding flights, bridal party charter, wedding guest transport, celebration jet rental",
-        "keyword_zh": "目的地婚礼",
-        "priority": "Medium-High",
-        "description": "Niche but emotionally resonant travel segment"
-    },
+    
     {
         "category": "Specialized Travel Markets",
         "keyword_en": "Wellness retreats, luxury spa destinations, health resort travel, rejuvenation getaways, medical tourism private jets",
@@ -272,13 +280,7 @@ keyword_list = [
     },
     
     # 技术创新与数字化
-    {
-        "category": "Technology Innovation & Digital",
-        "keyword_en": "AI flight optimization private jets, artificial intelligence aviation, machine learning flight planning, automated charter booking, smart aircraft systems",
-        "keyword_zh": "AI航班优化私人飞机",
-        "priority": "Medium",
-        "description": "Technology disruptions transforming charter operations"
-    }
+    
 ]
 
 
@@ -317,94 +319,6 @@ news_schema = {
 }
 
 
-seo_keywords="""
-
-你是一位优秀的搜索引擎的SEO优化师，擅长排名优化，现在你需要进行seo优化中重要的关键词研究。请帮你的客户公司提供的文章中中提取最多15个关键词，其中有3个是长尾关键词。
-背景：关键词研究是指，在搜索引擎中查找要参与排名的关键词的过程。目的是了解客户搜索的潜在意图、以及如何搜索。同时它还涉及分析和比较关键词，以找到最佳的关键词机会。
-你的服务公司：JETBAY 是一家总部位于新加坡的全球私人公务机预订平台，在全球设有6个分支机构，致力于提供卓越的全球服务。提供快速、具竞争力且无缝衔接的预订体验，连接全球超过10,000架公务机和各类飞机机队，为客户带来卓越服务。
-作为一名专业seo专家，你要有以下的专业素养和职业技能：
-1：思索你的 “种子” 关键词，查看竞争对手的排名关键词，研究你的利基。
-2.你不应该将自己局限于一个国家，注意关键词趋势，并考虑关键词难度，内容长度、相关性，搜索意图
-3.全局排布，定位父话题，定位搜索意图，注意：Content type（内容类型），Content format（内容格式），Content angle（内容角度）
-
-JEYBAY公司提供的文章
-{}
-
-你需要重点分析文章观点，总结文章内容，提炼文章内容关键词，Classify them into intent buckets，  - Transactional (e.g. “book private jet Singapore”)，  - Informational (e.g. “how does private jet charter work”)，  - Localised (e.g. “private jet Bangkok to Singapore”)，  - Navigational (e.g. brand or platform name searches)。只输出出分类后的关键词
-"""
-
-seo_metadata="""
-作为一名为数字营销机构工作的SEO专家。您的客户为您提供了公司名称、服务描述和关键词。您的任务是为他们的服务页面创建标题和元描述标签。您的目标是优化页面以便搜索引擎，并将有机流量引导到网站。在撰写标签时，请牢记公司的目标受众和品牌准则。
-背景：Meta Title & Meta Description是網頁中的一些 HTML Meta Tags ，主要能夠幫助搜索引擎理解頁面上的內容，是 SEO 優化的最重要的第一步搜索引擎會分析這些 Meta Title 來導航搜尋主題關鍵字，並相應地對其進行關鍵字排名，因此 Meta Title 下的好壞，就會很大程度的影響 SEO 排名。
-公司描述：JETBAY 是一家总部位于新加坡的全球私人公务机预订平台，在全球设有6个分支机构，致力于提供卓越的全球服务。提供快速、具竞争力且无缝衔接的预订体验，连接全球超过10,000架公务机和各类飞机机队，为客户带来卓越服务。24/7全天候提供飞机，无购机负担，价格极具竞争力。AI团队掌握了全球公务机运营数据库，可智能匹配最优的航班资源，减少空载飞行，提供最优的包机解决方案。JETBAY掌上包机团队开发了一套AI平台，与数据库深度整合，利用大数据优化包机资源，实现高效、便捷、可持续的飞行体验。我们的包机服务团队拥有超过20年的丰富经验，全天候为您提供顶级、高性价比的飞行解决方案，确保客户享受到无缝且个性化的包机体验。我们的运营保障团队以最高标准关注每一个细节，凭借丰富的行业经验和强大的合作网络，确保您的私人飞行顺畅无忧。
-作为一名seo优化专家，你编写的Metadata应该满足以下优点
-Meta Title 参考要点：
--Meta Title 必須與網頁上的內容高度相關
--為搜尋引擎使用者自然地寫，避免過度堆疊關鍵字
--Meta Title 內容具體、簡潔、長度堅持在 30 個-字以內
--提及你最想競爭的關鍵字至少1次、放在標題靠前的地方
--避免重複使用一樣的 Meta Title
--可以在末尾包含你的品牌名稱
--儘量使用數字（2023 年、7 個方法、8 個小步驟等等）
-
-Meta Description 参考要点
--Meta Description 不要過度堆疊關鍵字
--Meta Description 長度堅持在 120~180 個字以內
--提及你最想競爭的關鍵字至少 1~2 次即可
--多使用動詞和一目了然的行動呼籲（Call to Action）
--盡量讓 Meta Description 在搜尋結果看起來是獨特的
--分析搜尋引擎使用者目標去撰寫內容
-
-HTML Meta Tags
--Canonical Tag，  URL Slug (clean, keyword-based)
--Robot Meta Tag
--Header Tags，Header Tags 對於 SEO 優化有非常大的影響，通常都用於埋放關鍵字與長尾關鍵字，讓搜尋引擎可以知道你的網頁內容，大致與哪些關鍵字有相關。 權重也會跟著他們數字的推進依次遞減， H1 的權重是最大的， H6 是最小的，以此類推。更重要的是讓搜尋引擎明白你的網頁內容架構的編排，以及理解你的內容與什麼樣的關鍵字相關。
-
-FAQ Post，基于文章内容提出问题和回答
--注重内容布局：标题简洁明了，同时包含关键词。根据FAQ的内容，将其分类，问题和答案应该井然有序
--问题与答案的设计：问题要具有针对性，答案要详细且具体，保持客观性
--关键词优化策略：利用长尾关键词可以提高文章的精准度，吸引更精准的流量，关键词的密度不宜过高，保持在2%-3%为宜
-
-JEYBAY公司提供的文章{0}
-关键词：{1}
-
-根据matadata要点，重点分析文章观点，总结文章内容，根据文章提到的思路将关键词融入HTML Meta Tags中，请输出Meta Title，Meta Description，URL Slug，Hearders(H1 -H3),   2-3 个FAQ questions and answers
-"""
-
-
-rewrite_prompt = """
-# 角色：人类私人包机网站文章编辑
-Output Language：English
-
-## 主要任务
-重新组织AI收集的信息和依据提供的seo格式撰写文章，形成具有专业人类编辑特色的专业网站文章，同时保持原有信息和观点。
-
-## 工作流程
-1. 仔细阅读和理解AI收集输入新闻中的核心信息和观点，将分散的知识点整理成完整连贯的文章。
-2. 保留核心信息，严格保持原始图片和表格的格式，并必须以IEEE格式引用来源URL。
-3. 遵守提供的seo格式，并作为真实的人类作者开始重写和扩展更多内容：
-  - 用合理的逻辑连接分散的新闻和观点，将其编辑成完整连贯的文章
-  - 添加一些微妙的逻辑跳跃但专业的观点
-  - 避免使用"演进"等词汇
-  - 遵守格式中header的规定，并将关键词自然融入文章
-4. 确保重写的内容保持原文的核心信息和观点，但具有完全不同的表达风格。
-5. 在写作中使用第三人称视角或第三人称叙述来展现专业性
-6. 审查重写内容，确保其读起来像真正专业专家的自然表达。
-7. 正文控制输出字数在800-1500词，FAQ Post不计入正文
-
-## 重要注意事项
-- 添加一些轻微的不完美之处，如口语化表达或轻微的语法不规范
-- 避免过于完美或结构化的表达
-- 在写作中使用第三人称视角或第三人称叙述来展现专业性
-
-## 输出格式
-直接输出编写后的文章，保留不需要任何解释或注释。最终输出需要包含：HTML Meta Tags( include Meta Title，Meta Description，URL Slug， Header)，编写后的文章，FAQ Post
-
-## 初始化
-请以真实的人类网站文章编辑身份重新创作此内容。
-收集的文章材料：{0}
-seo策略格式：{1}
-"""
 
 
 seo_keywords="""
@@ -462,7 +376,7 @@ Based on Metadata points, Focus on analyzing article viewpoints and summarize ar
 """
 
 
-rewrite_prompt = """
+seo_rewrite_prompt = """
 # Role: Human Private Jet Website Article Editor
 Output Language: English
 
@@ -475,6 +389,7 @@ Reorganize AI-collected information and write articles according to the provided
 3. Follow the provided SEO format and start rewriting and expanding more content as a real human author:
    - Use reasonable logic to connect scattered news and viewpoints, editing them into complete coherent articles
    - Add some subtle logical jumps but professional viewpoints
+   - Avoid using too many long complex sentences. Use simple sentences, data, and examples for better readability and credibility.
    - Follow the header regulations in the format and naturally integrate keywords into the article
 4. Ensure the rewritten content maintains the core information and viewpoints of the original text, but has completely different expression styles.
 5. Use third-person perspective or third-person narration in writing to show professionalism
@@ -499,49 +414,6 @@ seo_link="""
 # Role: Human Private Jet Website Article Editor
 Output Language: English
 ## Main Task
-作为JETBAY网站编辑，你需要阅读当前编写好的文章，分析文章行文逻辑和结构，只做一些微小的改动，自然地将JEYABY公司描述和文章链接植入到原文章之中，并适当减少其他竞争公务包机公司的出现次数。
-
-## Workflow
-1. Carefully read and understand the core information and viewpoints of the article,找到哪些片段可以自然地植入JEYABY公司
-2 作为jetbay文章编辑，如果文章涉及到对应内容，应该自然插入JETBAY的业务范围，品牌调性，市场需求等，但不可以与原文章冲突。并减少提及其它竞争公务包机公司的次数
-  -切入点要自然，不与原始文章矛盾，不要强行插入描述，如果整篇文章没有合适植入点，可以选择不植入描述
-  -修改改动要少，不要破坏原始文章结构
-3.审查改动后的文章，保证原始文章结构的完整，内容不丢失
-
-## Important Notes
-- 切入点要自然，控制植入频率不要太高，1-3次
-- 不可以改动任何的原始文章结构，不可以大幅度增加或删除原始文章内容
-
-## Output Format
-Directly output the written article, retain without any explanation or annotation. The final output should include all original parts: HTML Meta Tags (include Meta Title, Meta Description, URL Slug, Header), written article
-
-## Initialization
-请参考相应资料，完成你的广告植入任务
-Company Description: JETBAY is a global private jet booking platform headquartered in Singapore, with 6 branches worldwide, committed to providing excellent global services. It provides fast, competitive and seamless booking experiences, connecting over 10,000 private jets and various aircraft fleets globally, bringing excellent service to customers. 24/7 aircraft availability without the burden of purchasing, with highly competitive prices. The AI team has mastered the global private jet operation database, can intelligently match optimal flight resources, reduce empty flights, and provide optimal charter solutions. JETBAY's mobile charter team has developed an AI platform that deeply integrates with databases, uses big data to optimize charter resources, and achieves efficient, convenient, and sustainable flight experiences. Our charter service team has over 20 years of rich experience, providing top-tier, cost-effective flight solutions 24/7, ensuring customers enjoy seamless and personalized charter experiences. Our operational support team pays attention to every detail with the highest standards, and with rich industry experience and strong cooperation networks, ensures your private flight is smooth and worry-free.
-JETBAY links:
-| Category        | Link                                             | Keywords / Grouping               | Path                          |
-|-----------------|--------------------------------------------------|-----------------------------------|-------------------------------|
-| Home Page       | https://www.jet-bay.com                          | TBC                               | -                             |
-| Jet Card        | https://www.jet-bay.com/jet-card                 | JetCard, Private Jet Ownership    | -                             |
-| Empty Leg       | https://www.jet-bay.com/empty-leg                | Empty Leg, Empty Leg Flights      | -                             |
-| Product Page    | https://www.jet-bay.com/services                 | Private Jet Rental                | /services                     |
-| Product Page    | https://www.jet-bay.com/services/private-jet-charter | Private Jet                   | /services/private-jet-charter |
-| Product Page    | https://www.jet-bay.com/services/group-air-charter   | Group                         | /services/group-air-charter   |
-| Product Page    | https://www.jet-bay.com/services/corporate-air-charter | Business                   | /services/corporate-air-charter |
-| Product Page    | https://www.jet-bay.com/services/air-ambulance   | Air Ambulance                     | /services/air-ambulance       |
-| Product Page    | https://www.jet-bay.com/services/pet-travel/     | Pet Travel                        | /services/pet-travel          |
-| Product Page    | https://www.jet-bay.com/services/event-charter/  | Event                             | /services/event-charter       |
-| Destination     | https://www.jet-bay.com/destination/             | Destination                       | /destination                  |
-| News            | https://www.jet-bay.com/news/                     | News                              | /news                         |
-| Booking Process | https://www.jet-bay.com/charter-guide/booking-process | Booking                    | -                             |
-| About Us        | https://www.jet-bay.com/about-us                  | About Us                          | /about-us                     |
-
-original article:{0}
-"""
-seo_link="""
-# Role: Human Private Jet Website Article Editor
-Output Language: English
-## Main Task
 As a JETBAY website editor, you need to read the currently written article, analyze the article's logical flow and structure, make only minor modifications, naturally integrate JETBAY company descriptions and article links into the original article, and appropriately reduce the appearance frequency of other competing business jet charter companies.
 
 ## Workflow
@@ -553,7 +425,7 @@ As a JETBAY website editor, you need to read the currently written article, anal
 
 ## Important Notes
 - Entry points must be natural, control integration frequency not too high, 1-3 times.
-- Reduce the frequency of competitor company appearances，但是不可以改变文章意思
+- Reduce the frequency of competitor company appearances,but can not change the original viewpoints
 - Cannot modify any original article structure, cannot significantly add or delete original article content
 
 ## Output Format
