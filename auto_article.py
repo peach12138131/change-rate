@@ -5,7 +5,7 @@ import os
 import random
 from typing import List, Dict, Any, Optional,Generator
 import time
-from auto_article_config import keyword_list,claude_key,tavily_key,openai_key,generate_svg_prompt,rewrite_prompt,extract_svg_from_text, extract_final_report,news_schema
+from auto_article_config import keyword_list,claude_key,tavily_key,openai_key,generate_svg_prompt,rewrite_prompt,extract_svg_from_text, extract_final_report,news_schema,seo_metadata,seo_keywords,seo_link,seo_rewrite_prompt
 
 def query_gpt_model(prompt: str, article: str, api_key: str, base_url: str = "https://api.anthropic.com/v1", 
                    model: str = "claude-sonnet-4-20250514", max_tokens: int = 10240, 
@@ -21,7 +21,7 @@ def query_gpt_model(prompt: str, article: str, api_key: str, base_url: str = "ht
     payload = {
         "model": model,
         "messages": [
-            {"role": "user", "content": f"{prompt}\n here is article:\n{article}"}
+            {"role": "user", "content": f"{prompt}\n \n{article}"}
         ],
         "temperature": temperature,
         "max_tokens": max_tokens
@@ -31,6 +31,7 @@ def query_gpt_model(prompt: str, article: str, api_key: str, base_url: str = "ht
         response = requests.post(url, headers=headers, json=payload)
         response.raise_for_status()
         response_json = response.json()
+        time.sleep(10)
         if "content" in response_json and len(response_json["content"]) > 0:
            
             text_content = response_json["content"][0]["text"]
@@ -59,7 +60,7 @@ def query_openai_model(prompt: str, article: str, api_key: str, base_url: str = 
     payload = {
         "model": model,
         "messages": [
-            {"role": "user", "content": f"{prompt}\n here is article:\n{article}"}
+            {"role": "user", "content": f"{prompt}\n \n{article}"}
         ],
         "temperature": temperature,
         "max_tokens": max_tokens
@@ -75,6 +76,7 @@ def query_openai_model(prompt: str, article: str, api_key: str, base_url: str = 
         response = requests.post(url, headers=headers, json=payload)
         response.raise_for_status()
         response_json = response.json()
+        time.sleep(10)
         if "choices" in response_json and len(response_json["choices"]) > 0:
             text_content = response_json["choices"][0]["message"]["content"]
             return text_content
@@ -325,14 +327,16 @@ def auto_write_article(news_list):
             #     research_content += content_chunk
             
             # 
+
+
             if extract_news:
                 # 提取最终报告
                 # final_report = extract_final_report(research_content)
                 final_report = extract_news
                 
-                # 构建单篇文章内容
+                # 构建原始log回溯
                 article_content = f"# {category}\n\n## description\n{description}\n\n## the research material and collected news \n{final_report}"
-                time.sleep(10)
+                
                 
                 # 调用API改写文章
                 print(f" 正在生成第 {i} 条新闻的文章...")
@@ -344,8 +348,31 @@ def auto_write_article(news_list):
                     model_used = "OpenAI"
 
                 print(f"[表情] 使用了 {model_used} 模型")
-                time.sleep(10)
                 
+                
+                #seo改写流程1，提取关键字
+                keywords_prompt=seo_keywords.format(rewritten_article)
+                keywords=query_gpt_model(keywords_prompt, "", claude_key, temperature=1.0)
+
+
+                #2生成metadata
+                metadata_prompt=seo_metadata.format(rewritten_article,keywords)
+                metadata=query_gpt_model(metadata_prompt, "", claude_key, temperature=1.0)
+
+                #3重写
+                seo_rewrite=seo_rewrite_prompt.format(final_report,metadata)
+                seo_article=query_gpt_model(seo_rewrite, "", claude_key, temperature=1.0)
+                
+                #植入链接
+                seo_link_prompt=seo_link.format(seo_article)
+                final_seo_article=query_gpt_model(seo_link_prompt, "", claude_key, temperature=1.0)
+
+                log_content=f"collected news \n{final_report} \n \nkeywords\n{keywords}\n\n"
+
+
+
+
+
                 if rewritten_article:
                     date_str = datetime.now().strftime("%Y%m%d")
                     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
@@ -362,20 +389,26 @@ def auto_write_article(news_list):
                     with open(filename, 'w', encoding='utf-8') as f:
                         f.write(rewritten_article)
 
-                    svg_text = query_gpt_model(generate_svg_prompt, rewritten_article, claude_key)
-                    time.sleep(10)
-                    svg_codes=extract_svg_from_text(svg_text)
+                    #保存seo文章
+                    seo_filename = f"{output_dir}/seo_article_{i}_{safe_title}_{timestamp}.txt"
+                    with open(seo_filename, 'w', encoding='utf-8') as f:
+                        f.write(final_seo_article)
+
+
                     # 保存SVG文件 - 关键代码就这几行
+                    svg_text = query_gpt_model(generate_svg_prompt, rewritten_article, claude_key)
+                    svg_codes=extract_svg_from_text(svg_text)
                     for idx, svg_code in enumerate(svg_codes):
                         svg_filename = f"{output_dir}/chart_{i}_{safe_title}_{timestamp}_{idx+1}.svg"
                         with open(svg_filename, 'w', encoding='utf-8') as f:
                             f.write(svg_code)
                         print(f"[成功] SVG已保存: {svg_filename}")
                     
+
                     # 同时保存原始研究内容
                     raw_filename = f"{output_dir}/raw_research_{i}_{safe_title}_{timestamp}.txt"
                     with open(raw_filename, 'w', encoding='utf-8') as f:
-                        f.write(article_content)
+                        f.write(log_content)
                 else:
                     print(f"[表情] 第 {i} 条新闻文章生成失败")
                     
