@@ -323,22 +323,26 @@ news_schema = {
 
 seo_keywords="""
 
-You are an excellent SEO optimizer for search engines, skilled in ranking optimization. Now you need to conduct important keyword research for SEO optimization. Please extract up to 10 keywords from the article provided by your client company, of which 3 should be long-tail keywords.
+You are an excellent SEO optimizer for search engines, skilled in ranking optimization. Now you need to conduct important keyword research for SEO optimization. Please extract up to 10 keywords from the news materials provided by your client company, of which 3 should be long-tail keywords and 2 keywords summarize from hotest news.
 Background: Keyword research refers to the process of finding keywords to compete for ranking in search engines. The purpose is to understand the potential intent of customer searches and how they search. It also involves analyzing and comparing keywords to find the best keyword opportunities.
 Your service company: JETBAY is a global private jet booking platform headquartered in Singapore, with 6 branches worldwide, committed to providing excellent global services. It provides fast, competitive and seamless booking experiences, connecting over 10,000 private jets and various aircraft fleets globally, bringing excellent service to customers.
 As a professional SEO expert, you should have the following professional qualities and steps:
-1: Think about your "seed" keywords, check competitors' ranking keywords, and research your niche.
+1: You need to have sharp insight and apply internet marketing or advertising operations mindset to identify the most compelling breaking news, industry dynamics, and trending topics that can attract user engagement. Consider how to naturally connect these elements with your brand, then distill them into relevant keywords.
 2. You should not limit yourself to one country, pay attention to keyword trends, and consider keyword difficulty, content length, relevance, and search intent.
-3. Global layout, positioning parent topics, positioning search intent, note: Content type, Content format, Content angle
-4. The article intention can be classified - Transactional (e.g. "book private jet Singapore"), - Informational (e.g. "how does private jet charter work"), - Localised (e.g. "private jet Bangkok to Singapore"), - Navigational (e.g. brand or platform name searches)
-Article provided by JETBAY company
+3. The article intention can be classified - Transactional (e.g. "book private jet Singapore"), - Informational (e.g. "how does private jet charter work"), - Localised (e.g. "private jet Bangkok to Singapore"), - Navigational (e.g. brand or platform name searches)
+
+Workflow;
+Step1: Comprehend all news content, identify current news hotspots, and determine a singular article intention classification based on comprehensive global analysis.
+Step2: Leverage your professional expertise to extract keywords, ensuring all keywords align with the singular intention.
+
+Recent news provided by JETBAY company
 {}
 
-You need to focus on analyzing the article's viewpoints and intent, summarize the article content and intention, extract key keywords from the article content, all the ketwords should focus on only 1 intention . Only output the classified keywords.
+Only output the classified keywords.
 """
 
 seo_metadata="""
-As an SEO expert working for a digital marketing agency. Your client has provided you with company name, service description, and keywords. Your task is to create title and meta description tags for their service pages. Your goal is to optimize pages for search engines and drive organic traffic to the website. When writing tags, keep in mind the company's target audience and brand guidelines.
+Role:As an SEO expert working for a digital marketing agency. Your client has provided you with company name, service description, and keywords. Your task is to create title and meta description tags for their service pages. Your goal is to optimize pages for search engines and drive organic traffic to the website. When writing tags, keep in mind the company's target audience and brand guidelines.
 Background: Meta Title & Meta Description are some HTML Meta Tags in web pages that mainly help search engines understand the content on the page, and are the most important first step in SEO optimization. Search engines will analyze these Meta Titles to navigate search topic keywords and rank them accordingly for keywords, so the quality of Meta Title will greatly affect SEO ranking.
 Company Description: JETBAY is a global private jet booking platform headquartered in Singapore, with 6 branches worldwide, committed to providing excellent global services. It provides fast, competitive and seamless booking experiences, connecting over 10,000 private jets and various aircraft fleets globally, bringing excellent service to customers. 24/7 aircraft availability without the burden of purchasing, with highly competitive prices. The AI team has mastered the global private jet operation database, can intelligently match optimal flight resources, reduce empty flights, and provide optimal charter solutions. JETBAY's mobile charter team has developed an AI platform that deeply integrates with databases, uses big data to optimize charter resources, and achieves efficient, convenient, and sustainable flight experiences. Our charter service team has over 20 years of rich experience, providing top-tier, cost-effective flight solutions 24/7, ensuring customers enjoy seamless and personalized charter experiences. Our operational support team pays attention to every detail with the highest standards, and with rich industry experience and strong cooperation networks, ensures your private flight is smooth and worry-free.
 As an SEO optimization expert, the Metadata you write should meet the following advantages:
@@ -362,17 +366,32 @@ Meta Description Reference Points (max 160 characters):
 HTML Meta Tags
 - Canonical Tag, URL Slug (clean, keyword-based)
 - Robot Meta Tag
-- Header Tags, Header Tags have a very significant impact on SEO optimization, usually used to embed keywords and long-tail keywords, so search engines can know what keywords your webpage content is related to. The weight decreases sequentially with their numbers, H1 has the highest weight, H6 has the lowest, and so on. More importantly, it helps search engines understand the structure of your webpage content and understand what keywords your content is related to.
+
+Header Tags
+-Header Tags have a very significant impact on SEO optimization, usually used to embed keywords and long-tail keywords, so search engines can know what keywords your webpage content is related to. The weight decreases sequentially with their numbers, H1 has the highest weight, H6 has the lowest, and so on. More importantly, it helps search engines understand the structure of your webpage content and understand what keywords your content is related to.
+-Your client wants to create official website articles that leverage trending news as hook points. In your header tags, you should select the most compelling news stories, then naturally weave in the brand messaging and key selling points, developing an expansive article structure.
+
 
 FAQ Post, based on article content to propose questions and answers
 - Focus on content layout: titles should be concise and clear, while containing keywords. Based on FAQ content, categorize them, questions and answers should be well-organized
 - Question and answer design: questions should be targeted, answers should be detailed and specific, maintaining objectivity
 - Keyword optimization strategy: using long-tail keywords can improve article precision and attract more precise traffic, keyword density should not be too high, maintain 2%-3% as appropriate
 
-Article provided by JETBAY company {0}
+Workflow
+1.Read through the entire news content, identify the hottest news that you believe can most attract readers, and design titles that can satisfy readers' curiosity, such as industry dynamics, or reflect current hot topics, celebrity news, or social trends, new tech, sports events .
+2.Center around this news, explore related peripheral news, generate reports in a radiating manner, and design corresponding header structure.
+3.FAQ design also needs to revolve around hot topics or trending subjects.
+
+Important Notes
+-Please refer to advantages throughout the entire process
+-Article header design needs to be coherent with natural progression
+-Note that the focus is not on news reporting, but on naturally integrating keywords into your article structure to attract readers
+
+News provided by JETBAY company {0}
 Keywords: {1}
 
-Based on Metadata points, Focus on analyzing article viewpoints and summarize article content, note the article intention, then integrate keywords into HTML Meta Tags according to the ideas mentioned in the article, please output Meta Title (less than 60 characters), Meta Description (less than 160 characters), URL Slug, Headers (H1-H3 containing the article content, and 2-3 FAQ questions and answers as H3 sections, removing Q,A identifiers)
+Output:
+Integrate keywords into HTML Meta Tags according to the ideas mentioned in the News, please output Meta Title (less than 60 characters), Meta Description (less than 160 characters), URL Slug, Headers (H1-H3 containing the article content, and a H2 FAQ section include 2-3 questions and answers as H3 sections, removing Q,A identifiers)
 """
 
 
