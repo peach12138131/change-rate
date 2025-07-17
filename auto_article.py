@@ -366,6 +366,7 @@ def auto_write_article(news_list):
                 #植入链接
                 seo_link_prompt=seo_link.format(seo_article)
                 final_seo_article=query_gpt_model(seo_link_prompt, "", claude_key, temperature=1.0)
+                final_seo_article=f"keywords\n{keywords}\n\n{final_seo_article}"
 
                 log_content=f"collected news \n{final_report} \n \nkeywords\n{keywords}\n\n"
 
