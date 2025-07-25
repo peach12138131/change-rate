@@ -461,23 +461,53 @@ def auto_write_article(news_list):
             
 
         print("\n 所有新闻处理完成！")
+        return 0  
             
     except Exception as e:
         print(f" 处理失败: {e}")
-        return None
+        return 1
 
 
 if __name__ == "__main__":
     import schedule
-    import time
+    import time 
+    from datetime import datetime, timedelta
+
+    max_retries = 3
+    retry_interval_hours = 1
+    retry_count = 0
+    next_retry_time = None
+    
+    def execute_with_retry():
+        """执行任务并处理重试逻辑"""
+        global retry_count, next_retry_time
+        
+        print(f"执行任务... 尝试次数: {retry_count + 1}")
+        res = auto_write_article(news_list=keyword_list)
+        
+        if res == 0:  # 成功
+            print("任务执行成功！")
+            retry_count = 0
+            next_retry_time = None
+        else:  # 失败
+            retry_count += 1
+            if retry_count < max_retries:
+                next_retry_time = datetime.now() + timedelta(hours=retry_interval_hours)
+                print(f"任务失败，将在 {next_retry_time.strftime('%H:%M')} 进行第 {retry_count + 1} 次重试...")
+            else:
+                print(f"任务失败，已达到最大重试次数 {max_retries}")
+                retry_count = 0
+                next_retry_time = None
     # 立即执行一次
-    auto_write_article(news_list=keyword_list)
+    print("立即执行一次任务...")
+    execute_with_retry()
 
-    # 设置每天10点执行
-    schedule.every().day.at("10:00").do(auto_write_article, news_list=keyword_list)
 
+    schedule.every().day.at("10:00").do(execute_with_retry)
     # 保持运行
     while True:
+        if next_retry_time and datetime.now() >= next_retry_time:
+                execute_with_retry()
         schedule.run_pending()
         time.sleep(60)
     
