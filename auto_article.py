@@ -4,6 +4,7 @@ from datetime import datetime
 import os
 import random
 from typing import List, Dict, Any, Optional,Generator
+from collections import defaultdict
 import time
 from auto_article_config import keyword_list,claude_key,tavily_key,openai_key,generate_svg_prompt,rewrite_prompt,extract_svg_from_text, extract_final_report,news_schema,seo_metadata,seo_keywords,seo_link,seo_rewrite_prompt
 
@@ -31,7 +32,7 @@ def query_gpt_model(prompt: str, article: str, api_key: str, base_url: str = "ht
         response = requests.post(url, headers=headers, json=payload)
         response.raise_for_status()
         response_json = response.json()
-        time.sleep(10)
+        time.sleep(30)
         if "content" in response_json and len(response_json["content"]) > 0:
            
             text_content = response_json["content"][0]["text"]
@@ -262,13 +263,13 @@ def search_news(tavily_api_key: str=tavily_key, query: str="", max_results: int 
         answer = result.get("answer", "")  # AI生成的答案摘要
         
         print(f"✅ 找到 {len(results)} 条新闻结果\n")
-        print(results)
+        
         
         # 如果包含AI答案摘要，打印出来
         if include_answer and answer:
             print(f"📝 AI摘要: {answer[:]}...")
         
-        return answer,results
+        return answer, results
         
     except requests.exceptions.Timeout:
         print("❌ 请求超时，请检查网络连接")
@@ -296,131 +297,173 @@ def auto_write_article(news_list):
     
     
     try:
+        news_pool=[]
         news_list=news_list 
+        date_str = datetime.now().strftime("%Y%m%d")
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        # 创建带日期的输出目录
+        output_dir = f"./output/{date_str}"
+        os.makedirs(output_dir, exist_ok=True)
        
-        # 对每条进行深度搜素,对每条进行深度搜索并生成单独文章
-        for i, news in enumerate(news_list, 1): 
+        # 对关键词进行搜索，生成新闻池
+        for i, news in enumerate(news_list): 
             category = news.get("category", "")
             keyword = news.get("keyword_en", "")
             description= news.get("description", "")
-            print(f"\n[表情] 正在研究第 {i} 条新闻:")
+            print(f"\n[表情] 正在研究第 {i} 新闻:")
             print(f"标题: {category}")
             print(f"内容: {description}")
 
             #获取实时新闻主题
             topic,news_results=search_news(query=f"Search for diversity news releated to private jet (or business charter) about:{category},keyword:{keyword}Please find relevant news articles, expert opinions, and background information.")
 
-            print(f"主题: {news_results}")
-
+           
+            print("筛选新闻中")
             extract_query =f"Please extract the news that most relevant to private charter topic about:{category},{description} from the following news results.Note:1.the content should be related 2.Try choose diverse sources"
-
             extract_news = query_openai_model(extract_query,news_results,openai_key,json_schema=news_schema)
-            print(f"提取的新闻: {extract_news}")
 
-            # # 构建研究查询
-            # query = f"Please research the related information and related news releated to private jet (or business charter) about this news topic: {news_results}"
+            print(extract_news)
+            extract_news=json.loads(extract_news)
+            print(extract_news["news_list"])
             
-            # # 进行深度研究
-            # print("[表情] 开始深度研究...")
-            # research_content = ""
-            # for content_chunk in send_research_request(query=query):
-            #     research_content += content_chunk
+
+            news_pool.append(extract_news["news_list"])
+
             
-            # 
+
+         #去对news_pool进行去重
+        all_news = []
+        for news_list in news_pool:
+            all_news.extend(news_list)
+
+        # 用字典去重，URL作为key
+        unique_news_dict = {}
+        for news in all_news:
+            url = news.get('url')
+            if url:
+                unique_news_dict[url] = news  # 如果URL重复，会被覆盖
+
+        news_pool = list(unique_news_dict.values())
+
+        #保存news_pool为json
+        news_file_name=os.path.join(output_dir, "news_pool.json")
+        with open(news_file_name, "w", encoding="utf-8") as f:
+            json.dump(news_pool, f, ensure_ascii=False, indent=4)
 
 
-            if extract_news:
-                # 提取最终报告
-                # final_report = extract_final_report(research_content)
-                final_report = extract_news
-                
-                # 构建原始log回溯
-                article_content = f"# {category}\n\n## description\n{description}\n\n## the research material and collected news \n{final_report}"
-                
-                
-                # 调用API改写文章
-                print(f" 正在生成第 {i} 条新闻的文章...")
-                if random.choice([True, False]):
-                    rewritten_article = query_gpt_model(rewrite_prompt, article_content, claude_key, temperature=1.0)
-                    model_used = "claude"
-                else:
-                    rewritten_article = query_openai_model(rewrite_prompt, article_content, openai_key, temperature=1.0)
-                    model_used = "OpenAI"
-
-                print(f"[表情] 使用了 {model_used} 模型")
-                
-                
-                #seo改写流程1，提取关键字
-                keywords_prompt=seo_keywords.format(rewritten_article)
-                keywords=query_gpt_model(keywords_prompt, "", claude_key, temperature=1.0)
+       
 
 
-                #2生成metadata
-                metadata_prompt=seo_metadata.format(rewritten_article,keywords)
-                metadata=query_gpt_model(metadata_prompt, "", claude_key, temperature=1.0)
+        
+            
+           
+        if news_pool:
+            # 按类别分组新闻
+            news_by_category = defaultdict(list)
+            for news in news_pool:
+                category = news.get('category', 'Unknown')
+                news_by_category[category].append(news)
+            
+            print(f"发现 {len(news_by_category)} 个类别的新闻")
+            for category, news_list in news_by_category.items():
+                print(f"类别 '{category}': {len(news_list)} 条新闻")
+                start_idx = 0
+                batch_count = 0
 
-                #3重写
-                seo_rewrite=seo_rewrite_prompt.format(final_report,metadata)
-                seo_article=query_gpt_model(seo_rewrite, "", claude_key, temperature=1.0)
-                
-                #植入链接
-                seo_link_prompt=seo_link.format(seo_article)
-                final_seo_article=query_gpt_model(seo_link_prompt, "", claude_key, temperature=1.0)
-                final_seo_article=f"keywords\n{keywords}\n\n{final_seo_article}"
-
-                log_content=f"collected news \n{final_report} \n \nkeywords\n{keywords}\n\n"
-
-
-
-
-
-                if rewritten_article:
-                    date_str = datetime.now().strftime("%Y%m%d")
-                    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+                while start_idx < len(news_list):
+                    batch_size = min(random.randint(5, 10), len(news_list) - start_idx)
+                    end_idx = start_idx + batch_size
+                    print(f"\n处理第 {batch_count + 1} 批次：索引 {start_idx}-{end_idx-1} ({batch_size} 条新闻)")
+                    batch_news = news_list[start_idx:end_idx]
+                    final_report = ""
+                    for new in enumerate(batch_news):
+                        final_report += f"{new}\n\n"
                     
-                    # 清理文件名，移除特殊字符
-                    safe_title = "".join(c for c in category if c.isalnum() or c in (' ', '-', '_')).rstrip()[:50]
+                    # 构建原始log回溯
+                    article_content = f"## the research material and collected news \n{final_report}"
                     
-                    # 创建带日期的输出目录
-                    output_dir = f"./output/{date_str}"
-                    os.makedirs(output_dir, exist_ok=True)
                     
-                    # 保存改写后的文章
-                    filename = f"{output_dir}/article_{i}_{safe_title}_{timestamp}.txt"
-                    with open(filename, 'w', encoding='utf-8') as f:
-                        f.write(rewritten_article)
+                    # 调用API改写文章
+                    print(f" 正在生成第 {batch_count + 1} 条新闻的文章...")
+                    if random.choice([True, False]):
+                        rewritten_article = query_gpt_model(rewrite_prompt, article_content, claude_key, temperature=1.0)
+                        model_used = "claude"
+                    else:
+                        rewritten_article = query_openai_model(rewrite_prompt, article_content, openai_key, temperature=1.0)
+                        model_used = "OpenAI"
 
-                    #保存seo文章
-                    seo_filename = f"{output_dir}/seo_article_{i}_{safe_title}_{timestamp}.txt"
-                    with open(seo_filename, 'w', encoding='utf-8') as f:
-                        f.write(final_seo_article)
-
-
-                    # 保存SVG文件 - 关键代码就这几行
-                    svg_text = query_gpt_model(generate_svg_prompt, rewritten_article, claude_key)
-                    svg_codes=extract_svg_from_text(svg_text)
-                    for idx, svg_code in enumerate(svg_codes):
-                        svg_filename = f"{output_dir}/chart_{i}_{safe_title}_{timestamp}_{idx+1}.svg"
-                        with open(svg_filename, 'w', encoding='utf-8') as f:
-                            f.write(svg_code)
-                        print(f"[成功] SVG已保存: {svg_filename}")
+                    print(f"[表情] 使用了 {model_used} 模型")
                     
-
-                    # 同时保存原始研究内容
-                    raw_filename = f"{output_dir}/raw_research_{i}_{safe_title}_{timestamp}.txt"
-                    with open(raw_filename, 'w', encoding='utf-8') as f:
-                        f.write(log_content)
-                else:
-                    print(f"[表情] 第 {i} 条新闻文章生成失败")
                     
-                print(f"[表情] 第 {i} 条新闻处理完成")
-            else:
-                print(f"[表情] 第 {i} 条新闻研究失败")
+                    #seo改写流程1，提取关键字
+                    keywords_prompt=seo_keywords.format(rewritten_article)
+                    keywords=query_gpt_model(keywords_prompt, "", claude_key, temperature=1.0)
 
-        print("\n[表情] 所有新闻处理完成！")
+
+                    #2生成metadata
+                    metadata_prompt=seo_metadata.format(rewritten_article,keywords)
+                    metadata=query_gpt_model(metadata_prompt, "", claude_key, temperature=1.0)
+
+                    #3重写
+                    seo_rewrite=seo_rewrite_prompt.format(final_report,metadata)
+                    seo_article=query_gpt_model(seo_rewrite, "", claude_key, temperature=1.0)
+                    
+                    #植入链接
+                    seo_link_prompt=seo_link.format(seo_article)
+                    final_seo_article=query_gpt_model(seo_link_prompt, "", claude_key, temperature=1.0)
+                    final_seo_article=f"keywords\n{keywords}\n\n{final_seo_article}"
+
+                    log_content=f"collected news \n{final_report} \n \nkeywords\n{keywords}\n\n"
+
+
+
+
+
+                    if rewritten_article:
+                        
+                        
+                        
+                        # 保存改写后的文章
+                        filename = f"{output_dir}/article_{batch_count + 1}_{timestamp}.txt"
+                        with open(filename, 'w', encoding='utf-8') as f:
+                            f.write(rewritten_article)
+
+                        #保存seo文章
+                        jetbay_seo_dir=os.path.join(output_dir,"JETBAY")
+                        os.makedirs(jetbay_seo_dir, exist_ok=True)
+
+                        seo_filename = os.path.join(output_dir, 'JETBAY', f'seo_article_{batch_count + 1}_{timestamp}.txt')
+                        with open(seo_filename, 'w', encoding='utf-8') as f:
+                            f.write(final_seo_article)
+
+
+                        # 保存SVG文件 - 关键代码就这几行
+                        svg_text = query_gpt_model(generate_svg_prompt, rewritten_article, claude_key)
+                        svg_codes=extract_svg_from_text(svg_text)
+                        for idx, svg_code in enumerate(svg_codes):
+                            svg_filename = f"{output_dir}/chart_{batch_count + 1}_{timestamp}_{idx+1}.svg"
+                            with open(svg_filename, 'w', encoding='utf-8') as f:
+                                f.write(svg_code)
+                            print(f"[成功] SVG已保存: {svg_filename}")
+                        
+
+                        # 同时保存原始研究内容
+                        raw_filename = f"{output_dir}/raw_research_{batch_count + 1}_{timestamp}.txt"
+                        with open(raw_filename, 'w', encoding='utf-8') as f:
+                            f.write(log_content)
+                    else:
+                        print(f" 第 {batch_count + 1} 条新闻文章生成失败")
+                        
+                    print(f" 第 {batch_count + 1} 条新闻处理完成")
+
+                    start_idx = end_idx
+                    batch_count += 1
+            
+
+        print("\n 所有新闻处理完成！")
             
     except Exception as e:
-        print(f"[表情] 处理失败: {e}")
+        print(f" 处理失败: {e}")
         return None
 
 
