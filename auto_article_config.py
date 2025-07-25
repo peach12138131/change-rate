@@ -4,7 +4,6 @@ import html
 
 
 
-
 generate_svg_prompt=""""
     Please analyze the main content of this article, focusing on its narrative logic, data usage, and event trend changes. Create SVG illustrations that match this article, with requirements for a concise illustration style, refined text, no unnecessary text symbols, and colors that align with the simple and elegant style of the private jet industry. Output 1 SVG image based on the content. This is the article:
    
@@ -302,9 +301,14 @@ news_schema = {
                        "content": {
                            "type": "string",
                            "description": "News full content"
+                       },
+                       "category":{
+                           "type": "string",
+                           "enum": ["Transactional", "Informational", "Localised", "Navigational"],
+                           "description": " The article intention can be classified - Transactional (e.g. book private jet Singapore), - Informational (e.g. how does private jet charter work), - Localised (e.g. private jet Bangkok to Singapore), - Navigational (e.g. brand or platform name searches)"
                        }
                    },
-                   "required": ["url", "content"],
+                   "required": ["url", "content","category"],
                    "additionalProperties": False  # 必须添加这个
                },
                "minItems": 30,
@@ -400,7 +404,7 @@ seo_rewrite_prompt = """
 Output Language: English
 
 ## Main Task
-Reorganize AI-collected information and write articles according to the provided SEO format, forming professional website articles with professional human editorial characteristics, while maintaining original information and viewpoints.
+Reorganize AI-collected information and write articles according to the provided SEO format, forming website articles with  human editorial characteristics, while maintaining original information and viewpoints.
 
 ## Workflow
 1. Carefully read and understand the core information and viewpoints in the AI-collected input news, organize scattered knowledge points into complete coherent articles.
@@ -419,6 +423,7 @@ Reorganize AI-collected information and write articles according to the provided
 - Add some slight imperfections, such as colloquial expressions or slight grammatical irregularities
 - Avoid overly perfect or structured expressions
 - Use third-person perspective or third-person narration in writing to show professionalism
+- Your readers are ordinary people, so steer clear of complicated technical terms.
 
 ## Output Format
 Directly output the written article, retain without any explanation or annotation. The final output should include: HTML Meta Tags (include Meta Title, Meta Description, URL Slug, Header), written article
