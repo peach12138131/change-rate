@@ -311,7 +311,7 @@ news_schema = {
                    "required": ["url", "content","category"],
                    "additionalProperties": False  # 必须添加这个
                },
-               "minItems": 30,
+               "minItems": 10,
                "maxItems": 30
            }
        },
