@@ -309,7 +309,7 @@ Important Notes
 -Article header design needs to be coherent with natural progression
 -Note that the focus is not on news reporting, but on naturally integrating keywords into your article structure to attract readers
 
-News provided by JETBAY company {0}
+News provided by AVI-GO company {0}
 Keywords: {1}
 
 Output:
