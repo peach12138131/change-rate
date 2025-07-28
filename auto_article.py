@@ -319,7 +319,7 @@ def auto_write_article(news_list):
 
            
             print("筛选新闻中")
-            extract_query =f"Please extract the news that most relevant to private charter topic about:{category},{description} from the following news results.Note:1.the content should be related 2.Try choose diverse sources"
+            extract_query =f"Please extract the news that most relevant to private charter topic about from the following news results.Note:1.the content should be related 2.Try choose diverse sources"
             extract_news = query_openai_model(extract_query,news_results,openai_key,json_schema=news_schema)
 
             print(extract_news)
@@ -346,7 +346,7 @@ def auto_write_article(news_list):
         news_pool = list(unique_news_dict.values())
 
         #保存news_pool为json
-        news_file_name=os.path.join(output_dir, "news_pool.json")
+        news_file_name=os.path.join(output_dir, "jetbay_news_pool.json")
         with open(news_file_name, "w", encoding="utf-8") as f:
             json.dump(news_pool, f, ensure_ascii=False, indent=4)
 
@@ -371,7 +371,7 @@ def auto_write_article(news_list):
                 batch_count = 0
 
                 while start_idx < len(news_list):
-                    batch_size = min(random.randint(5, 10), len(news_list) - start_idx)
+                    batch_size = min(random.randint(5, 12), len(news_list) - start_idx)
                     end_idx = start_idx + batch_size
                     print(f"\n处理第 {batch_count + 1} 批次：索引 {start_idx}-{end_idx-1} ({batch_size} 条新闻)")
                     batch_news = news_list[start_idx:end_idx]
