@@ -41,163 +41,134 @@ Please recreate this content as an authentic human website article editor.
 """
 
     
-keyword_list = [
+enhanced_aviation_keyword_list = [
     {
-        "category": "Charter Platform & Booking Technology",
-        "keyword_en": "private jet booking, charter management, aviation SaaS, digital marketplace, trip planning automation, aircraft sourcing, broker software",
-        "keyword_zh": "私人飞机预订平台, 包机管理软件, 航空SaaS平台",
+        "category": "Aviation Platform & Booking Technology",
+        "keyword_en": "private jet booking, charter management platform, aviation SaaS, aircraft sourcing software, broker management system, flight booking automation",
+        "keyword_zh": "私人飞机预订, 包机管理平台, 航空SaaS, 飞机采购软件, 经纪人管理系统, 飞行预订自动化",
         "priority": "High",
-        "description": "Core platform technology for charter booking and management"
+        "description": "Core platform technology for aviation booking and management"
     },
     {
         "category": "Aviation Data Intelligence & Analytics",
-        "keyword_en": "aviation data platform, demand forecast, utilization analytics, pricing trends, business intelligence, market insights, flight data API",
-        "keyword_zh": "航空数据平台, 私人飞机需求预测, 航空商业智能",
+        "keyword_en": "aviation data platform, flight data API, aircraft market intelligence, aviation business analytics, demand forecasting aviation, pricing intelligence platform",
+        "keyword_zh": "航空数据平台, 飞行数据API, 飞机市场情报, 航空商业分析, 航空需求预测, 定价智能平台",
         "priority": "High",
         "description": "Data-driven insights and market intelligence for aviation industry"
     },
     {
-        "category": "Fleet Management & Operations",
-        "keyword_en": "fleet management SaaS, availability API, empty leg optimization, operator tools, positioning tracker, scheduling platform",
-        "keyword_zh": "机队管理航空SaaS, 飞机可用性API, 空腿优化",
-        "priority": "Medium",
-        "description": "Operational efficiency tools for aviation fleet managers"
+        "category": "Aircraft Fleet & Operations Management",
+        "keyword_en": "fleet management software, aircraft availability tracking, empty leg optimization, operator dashboard, aircraft positioning system, fleet utilization analytics",
+        "keyword_zh": "机队管理软件, 飞机可用性跟踪, 空腿优化, 运营商仪表板, 飞机调机系统, 机队利用率分析",
+        "priority": "High",
+        "description": "Comprehensive fleet and operational management solutions"
+    },
+    {
+        "category": "Aviation Professionals & Stakeholders",
+        "keyword_en": "aviation broker, aircraft operator, flight dispatcher, aviation manager, airline executive, aircraft owner, aviation consultant",
+        "keyword_zh": "航空经纪人, 飞机运营商, 飞行调度员, 航空经理人, 航空公司高管, 飞机所有者, 航空顾问",
+        "priority": "High",
+        "description": "Key aviation industry professionals and decision makers"
     },
     {
         "category": "Geographic Market Focus - Asia Pacific",
-        "keyword_en": "Asia charter software, Singapore private jet, APAC platform, Malaysia aviation, India business aviation, Hong Kong booking, Thailand marketplace",
-        "keyword_zh": "亚洲包机软件, 新加坡私人飞机预订, 亚太包机平台",
+        "keyword_en": "Asia Pacific aviation, Singapore aircraft platform, Hong Kong charter software, APAC aviation technology, Southeast Asia aviation, China business aviation",
+        "keyword_zh": "亚太航空, 新加坡飞机平台, 香港包机软件, 亚太航空技术, 东南亚航空, 中国商务航空",
         "priority": "High",
-        "description": "Regional market penetration in Asia-Pacific aviation sector"
+        "description": "Regional aviation market penetration in Asia-Pacific"
     },
     {
         "category": "European Aviation Technology",
-        "keyword_en": "Europe private jet, EU aviation data, Malta charter, UK business aviation, France aircraft, Germany SaaS, Switzerland platform",
-        "keyword_zh": "欧洲私人飞机预订平台, 欧盟航空数据, 马耳他包机软件",
+        "keyword_en": "European aviation platform, EU aircraft management, Malta aviation software, UK business aviation, European flight operations, Continental aviation system",
+        "keyword_zh": "欧洲航空平台, 欧盟飞机管理, 马耳他航空软件, 英国商务航空, 欧洲飞行运营, 欧洲大陆航空系统",
         "priority": "High",
         "description": "European market focus for aviation technology solutions"
     },
     {
-        "category": "Competitive Intelligence & Positioning",
-        "keyword_en": "Avi-Go vs Avinode, modern alternative, platform 2025, competitive analysis, technology disruption, next-gen solutions",
-        "keyword_zh": "Avi-Go对比Avinode, 现代包机经纪替代方案, 数字航空平台",
-        "priority": "Medium",
-        "description": "Competitive positioning and market differentiation"
+        "category": "Aviation Business Models & Services",
+        "keyword_en": "charter brokerage, aircraft leasing platform, aviation marketplace, flight aggregator, aircraft sharing economy, aviation fintech, jet card programs",
+        "keyword_zh": "包机经纪, 飞机租赁平台, 航空市场, 飞行聚合器, 飞机共享经济, 航空金融科技, 飞机卡项目",
+        "priority": "High",
+        "description": "Diverse aviation business models and service approaches"
     },
     {
-        "category": "API Integration & Partnerships",
-        "keyword_en": "aviation API, FBO marketplace, fuel partner API, ecosystem sharing, platform integration, software connectivity, API suite",
-        "keyword_zh": "航空API集成, FBO数字市场, 航空生态数据共享",
+        "category": "Aviation Technology Integration",
+        "keyword_en": "aviation API integration, FBO connectivity, fuel management API, aviation ecosystem platform, aircraft data sharing, flight planning integration",
+        "keyword_zh": "航空API集成, FBO连接, 燃油管理API, 航空生态平台, 飞机数据共享, 飞行计划集成",
         "priority": "Medium",
-        "description": "Technical integration and partnership opportunities"
+        "description": "Technical integration and partnership solutions"
     },
     {
-        "category": "Middle East & Gulf Markets",
-        "keyword_en": "Gulf charter software, UAE platform, MENA aviation, Qatar booking, Saudi business aviation, Bahrain management, Dubai SaaS",
-        "keyword_zh": "海湾包机软件, 阿联酋私人飞机平台, 中东北非航空软件",
+        "category": "Middle East & Gulf Aviation Markets",
+        "keyword_en": "Gulf aviation software, UAE aircraft platform, MENA aviation technology, Dubai aviation system, Qatar flight management, Saudi business aviation",
+        "keyword_zh": "海湾航空软件, 阿联酋飞机平台, 中东北非航空技术, 迪拜航空系统, 卡塔尔飞行管理, 沙特商务航空",
         "priority": "Medium",
         "description": "Strategic focus on Middle Eastern aviation markets"
     },
     {
-        "category": "Long-tail & Voice Search Optimization",
-        "keyword_en": "best sourcing tool 2025, save time quotes, real-time availability, operator development, digital transformation aviation",
-        "keyword_zh": "2025年最佳私人飞机采购工具, 包机经纪人如何节省报价时间",
+        "category": "Aviation Industry Segments",
+        "keyword_en": "corporate aviation, luxury charter, cargo aviation, helicopter operations, medical flights, government aviation, airline operations, general aviation",
+        "keyword_zh": "企业航空, 豪华包机, 货运航空, 直升机运营, 医疗航班, 政府航空, 航空公司运营, 通用航空",
+        "priority": "Medium",
+        "description": "Specialized aviation market segments and verticals"
+    },
+    {
+        "category": "Aviation Operational Solutions",
+        "keyword_en": "flight scheduling software, crew management system, aircraft maintenance platform, dispatch optimization, ground handling system, aviation workflow automation",
+        "keyword_zh": "飞行调度软件, 机组管理系统, 飞机维护平台, 调度优化, 地面服务系统, 航空工作流自动化",
+        "priority": "Medium",
+        "description": "Operational efficiency solutions across aviation touchpoints"
+    },
+    {
+        "category": "Aviation Customer & Sales Management",
+        "keyword_en": "aviation CRM, customer portal aviation, aviation sales platform, flight booking experience, aviation mobile app, passenger service system",
+        "keyword_zh": "航空CRM, 航空客户门户, 航空销售平台, 飞行预订体验, 航空移动应用, 乘客服务系统",
+        "priority": "Medium",
+        "description": "Customer relationship and sales management for aviation"
+    },
+    {
+        "category": "Aviation Performance & Analytics",
+        "keyword_en": "aviation KPIs, aircraft utilization metrics, flight performance analytics, aviation revenue optimization, operational efficiency measurement, aviation benchmarking",
+        "keyword_zh": "航空KPI, 飞机利用率指标, 飞行性能分析, 航空收入优化, 运营效率测量, 航空基准测试",
         "priority": "Low",
-        "description": "Specific query optimization for voice and long-tail searches"
+        "description": "Performance measurement and optimization in aviation"
     },
     {
-        "category": "Workflow Automation & ROI",
-        "keyword_en": "charter automation, digital quoting ROI, lifecycle automation, productivity tools, process optimization, efficiency software",
-        "keyword_zh": "包机工作流程自动化, 手动与数字报价投资回报率, 行程生命周期自动化",
+        "category": "Aviation Safety & Compliance",
+        "keyword_en": "aviation safety management, flight safety software, regulatory compliance aviation, aircraft certification system, aviation insurance platform, safety reporting system",
+        "keyword_zh": "航空安全管理, 飞行安全软件, 航空监管合规, 飞机认证系统, 航空保险平台, 安全报告系统",
         "priority": "Medium",
-        "description": "Operational efficiency and return on investment focus"
+        "description": "Safety and regulatory compliance solutions"
     },
     {
-        "category": "Core Technology Solutions",
-        "keyword_en": "charter automation, aviation CRM, booking API, matching algorithm, pricing engine, broker dashboard, operator portal",
-        "keyword_zh": "包机自动化, 航空CRM, 飞行预订API",
-        "priority": "High",
-        "description": "Essential technology components for aviation platforms"
-    },
-    {
-        "category": "Business Models & Services",
-        "keyword_en": "charter brokerage, leasing platform, sharing economy, aviation marketplace, flight aggregator, charter consolidation, aviation fintech",
-        "keyword_zh": "包机经纪, 飞机租赁平台, 喷气机共享经济",
-        "priority": "High",
-        "description": "Different business approaches in charter aviation"
-    },
-    {
-        "category": "User Experience & Interface",
-        "keyword_en": "intuitive booking, mobile app, one-click search, streamlined quotes, user-friendly software, seamless planning",
-        "keyword_zh": "直观包机预订, 移动航空应用, 一键飞机搜索",
+        "category": "Aviation Innovation & Technology Trends",
+        "keyword_en": "AI aviation solutions, blockchain aircraft records, IoT flight tracking, machine learning aviation, predictive maintenance aviation, digital aviation transformation",
+        "keyword_zh": "AI航空解决方案, 区块链飞机记录, 物联网飞行跟踪, 机器学习航空, 预测性维护航空, 数字航空转型",
         "priority": "Medium",
-        "description": "User-centric design and experience optimization"
+        "description": "Emerging technologies transforming aviation industry"
     },
     {
-        "category": "Industry Pain Points",
-        "keyword_en": "booking inefficiency, quote delays, availability gaps, pricing transparency, communication bottlenecks, operational blind spots",
-        "keyword_zh": "包机预订效率低下, 手动报价延迟, 飞机可用性缺口",
+        "category": "Aviation Industry Pain Points & Solutions",
+        "keyword_en": "reduce aviation costs, improve aircraft utilization, streamline flight operations, eliminate booking inefficiencies, aviation process optimization, operational bottleneck solutions",
+        "keyword_zh": "降低航空成本, 提高飞机利用率, 简化飞行运营, 消除预订低效, 航空流程优化, 运营瓶颈解决方案",
         "priority": "Medium",
-        "description": "Common challenges in traditional charter operations"
+        "description": "Solutions to common aviation industry challenges"
     },
     {
-        "category": "Emerging Technologies",
-        "keyword_en": "AI matching, blockchain records, IoT tracking, predictive maintenance, machine learning pricing, smart contracts",
-        "keyword_zh": "AI飞机匹配, 区块链航空记录, 物联网飞行追踪",
-        "priority": "Medium",
-        "description": "Next-generation technologies transforming aviation"
-    },
-    {
-        "category": "Market Segments",
-        "keyword_en": "corporate aviation, luxury charter, medical flights, cargo solutions, government services, sports charters",
-        "keyword_zh": "企业航空, 豪华旅行包机, 紧急医疗航班",
-        "priority": "Medium",
-        "description": "Specialized aviation market niches"
-    },
-    {
-        "category": "Performance Metrics",
-        "keyword_en": "conversion rates, booking velocity, utilization metrics, productivity KPIs, customer satisfaction, revenue optimization",
-        "keyword_zh": "包机转化率, 预订速度, 飞机利用率指标",
+        "category": "Aviation Market Intelligence & Competitive Analysis",
+        "keyword_en": "aviation market trends, competitive aviation analysis, aircraft market data, aviation industry insights, aviation market research, competitor benchmarking aviation",
+        "keyword_zh": "航空市场趋势, 竞争性航空分析, 飞机市场数据, 航空行业洞察, 航空市场研究, 竞争对手基准航空",
         "priority": "Low",
-        "description": "Key performance indicators for aviation businesses"
+        "description": "Market intelligence and competitive analysis for aviation"
     },
     {
-        "category": "Compliance & Safety",
-        "keyword_en": "regulatory compliance, safety management, charter certification, flight protocols, insurance integration, regulatory reporting",
-        "keyword_zh": "航空监管合规, 安全管理系统, 包机认证",
-        "priority": "Medium",
-        "description": "Regulatory and safety considerations in charter operations"
-    },
-    {
-        "category": "Customer Journey",
-        "keyword_en": "inquiry to booking, client onboarding, customer retention, VIP delivery, lifecycle management, loyalty programs",
-        "keyword_zh": "包机咨询到预订, 客户入职航空, 重复客户保留",
+        "category": "Aviation Finance & Investment",
+        "keyword_en": "aviation finance platform, aircraft leasing management, aviation investment analysis, aircraft valuation system, aviation asset management, flight department budgeting",
+        "keyword_zh": "航空金融平台, 飞机租赁管理, 航空投资分析, 飞机估值系统, 航空资产管理, 飞行部门预算",
         "priority": "Low",
-        "description": "Complete customer experience in charter services"
-    },
-    {
-        "category": "Innovation & Disruption",
-        "keyword_en": "digital transformation, industry evolution, next-gen platforms, disruptive technology, future flying, startup ecosystem",
-        "keyword_zh": "航空数字化转型, 包机行业演变, 下一代航空平台",
-        "priority": "Medium",
-        "description": "Industry transformation and future trends"
-    },
-    {
-        "category": "Integration Ecosystems",
-        "keyword_en": "software stack, platform ecosystem, third-party integrations, API marketplace, partner networks, connected services",
-        "keyword_zh": "航空软件堆栈, 包机平台生态系统, 第三方集成",
-        "priority": "Medium",
-        "description": "Comprehensive integration and partnership strategies"
-    },
-    {
-        "category": "Operational Excellence",
-        "keyword_en": "operational efficiency, dispatch optimization, crew scheduling, maintenance coordination, fuel management, ground services",
-        "keyword_zh": "包机运营效率, 飞行调度优化, 机组排班自动化",
-        "priority": "Medium",
-        "description": "Operational optimization across all charter touchpoints"
+        "description": "Financial management and investment solutions for aviation"
     }
 ]
-    
 
 
 
@@ -229,7 +200,7 @@ news_schema = {
                    "required": ["url", "content","category"],
                    "additionalProperties": False  # 必须添加这个
                },
-               "minItems": 30,
+               "minItems": 10,
                "maxItems": 30
            }
        },
