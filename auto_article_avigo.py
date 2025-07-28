@@ -239,7 +239,7 @@ def search_news(tavily_api_key: str=tavily_key, query: str="", max_results: int 
     
     try:
         print(f"🔍 正在搜索新闻: {query}")
-        response = requests.post(url, headers=headers, json=data, timeout=30)
+        response = requests.post(url, headers=headers, json=data, timeout=60)
         response.raise_for_status()  # 检查HTTP错误
         
         result = response.json()
@@ -309,7 +309,15 @@ def auto_write_article(news_list):
 
            
             print("筛选新闻中")
-            extract_query =f"Please extract the news that most relevant to private charter topic about from the following news results.Note:1.the content should be related 2.Try choose diverse sources"
+            extract_query =f"""Current time {date_str}. 
+                                Please extract the news that most relevant to private charter topic about from the following news results.
+                                Important Note:
+                                1.the news content should be related 
+                                2.Try choose diverse sources
+                                3.Filter out the news too old 
+                                4.Filter out news from which it's difficult to obtain useful information,such as those that are too short, too old, or irrelevant.
+                                """
+            
             extract_news = query_openai_model(extract_query,news_results,openai_key,json_schema=news_schema)
 
             
