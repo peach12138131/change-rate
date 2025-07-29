@@ -41,136 +41,376 @@ Please recreate this content as an authentic human website article editor.
 """
 
     
-enhanced_aviation_keyword_list = [
+# enhanced_aviation_keyword_list = [
+#     {
+#         "category": "Aviation Platform & Booking Technology",
+#         "keyword_en": "private jet booking, charter management platform, aviation SaaS, aircraft sourcing software, broker management system, flight booking automation",
+#         "keyword_zh": "私人飞机预订, 包机管理平台, 航空SaaS, 飞机采购软件, 经纪人管理系统, 飞行预订自动化",
+#         "priority": "High",
+#         "description": "Core platform technology for aviation booking and management"
+#     },
+#     {
+#         "category": "Aviation Data Intelligence & Analytics",
+#         "keyword_en": "aviation data platform, flight data API, aircraft market intelligence, aviation business analytics, demand forecasting aviation, pricing intelligence platform",
+#         "keyword_zh": "航空数据平台, 飞行数据API, 飞机市场情报, 航空商业分析, 航空需求预测, 定价智能平台",
+#         "priority": "High",
+#         "description": "Data-driven insights and market intelligence for aviation industry"
+#     },
+#     {
+#         "category": "Aircraft Fleet & Operations Management",
+#         "keyword_en": "fleet management software, aircraft availability tracking, empty leg optimization, operator dashboard, aircraft positioning system, fleet utilization analytics",
+#         "keyword_zh": "机队管理软件, 飞机可用性跟踪, 空腿优化, 运营商仪表板, 飞机调机系统, 机队利用率分析",
+#         "priority": "High",
+#         "description": "Comprehensive fleet and operational management solutions"
+#     },
+#     {
+#         "category": "Aviation Professionals & Stakeholders",
+#         "keyword_en": "aviation broker, aircraft operator, flight dispatcher, aviation manager, airline executive, aircraft owner, aviation consultant",
+#         "keyword_zh": "航空经纪人, 飞机运营商, 飞行调度员, 航空经理人, 航空公司高管, 飞机所有者, 航空顾问",
+#         "priority": "High",
+#         "description": "Key aviation industry professionals and decision makers"
+#     },
+#     {
+#         "category": "Geographic Market Focus - Asia Pacific",
+#         "keyword_en": "Asia Pacific aviation, Singapore aircraft platform, Hong Kong charter software, APAC aviation technology, Southeast Asia aviation, China business aviation",
+#         "keyword_zh": "亚太航空, 新加坡飞机平台, 香港包机软件, 亚太航空技术, 东南亚航空, 中国商务航空",
+#         "priority": "High",
+#         "description": "Regional aviation market penetration in Asia-Pacific"
+#     },
+#     {
+#         "category": "European Aviation Technology",
+#         "keyword_en": "European aviation platform, EU aircraft management, Malta aviation software, UK business aviation, European flight operations, Continental aviation system",
+#         "keyword_zh": "欧洲航空平台, 欧盟飞机管理, 马耳他航空软件, 英国商务航空, 欧洲飞行运营, 欧洲大陆航空系统",
+#         "priority": "High",
+#         "description": "European market focus for aviation technology solutions"
+#     },
+#     {
+#         "category": "Aviation Business Models & Services",
+#         "keyword_en": "charter brokerage, aircraft leasing platform, aviation marketplace, flight aggregator, aircraft sharing economy, aviation fintech, jet card programs",
+#         "keyword_zh": "包机经纪, 飞机租赁平台, 航空市场, 飞行聚合器, 飞机共享经济, 航空金融科技, 飞机卡项目",
+#         "priority": "High",
+#         "description": "Diverse aviation business models and service approaches"
+#     },
+#     {
+#         "category": "Aviation Technology Integration",
+#         "keyword_en": "aviation API integration, FBO connectivity, fuel management API, aviation ecosystem platform, aircraft data sharing, flight planning integration",
+#         "keyword_zh": "航空API集成, FBO连接, 燃油管理API, 航空生态平台, 飞机数据共享, 飞行计划集成",
+#         "priority": "Medium",
+#         "description": "Technical integration and partnership solutions"
+#     },
+#     {
+#         "category": "Middle East & Gulf Aviation Markets",
+#         "keyword_en": "Gulf aviation software, UAE aircraft platform, MENA aviation technology, Dubai aviation system, Qatar flight management, Saudi business aviation",
+#         "keyword_zh": "海湾航空软件, 阿联酋飞机平台, 中东北非航空技术, 迪拜航空系统, 卡塔尔飞行管理, 沙特商务航空",
+#         "priority": "Medium",
+#         "description": "Strategic focus on Middle Eastern aviation markets"
+#     },
+#     {
+#         "category": "Aviation Industry Segments",
+#         "keyword_en": "corporate aviation, luxury charter, cargo aviation, helicopter operations, medical flights, government aviation, airline operations, general aviation",
+#         "keyword_zh": "企业航空, 豪华包机, 货运航空, 直升机运营, 医疗航班, 政府航空, 航空公司运营, 通用航空",
+#         "priority": "Medium",
+#         "description": "Specialized aviation market segments and verticals"
+#     },
+#     {
+#         "category": "Aviation Operational Solutions",
+#         "keyword_en": "flight scheduling software, crew management system, aircraft maintenance platform, dispatch optimization, ground handling system, aviation workflow automation",
+#         "keyword_zh": "飞行调度软件, 机组管理系统, 飞机维护平台, 调度优化, 地面服务系统, 航空工作流自动化",
+#         "priority": "Medium",
+#         "description": "Operational efficiency solutions across aviation touchpoints"
+#     },
+#     {
+#         "category": "Aviation Customer & Sales Management",
+#         "keyword_en": "aviation CRM, customer portal aviation, aviation sales platform, flight booking experience, aviation mobile app, passenger service system",
+#         "keyword_zh": "航空CRM, 航空客户门户, 航空销售平台, 飞行预订体验, 航空移动应用, 乘客服务系统",
+#         "priority": "Medium",
+#         "description": "Customer relationship and sales management for aviation"
+#     },
+#     {
+#         "category": "Aviation Performance & Analytics",
+#         "keyword_en": "aviation KPIs, aircraft utilization metrics, flight performance analytics, aviation revenue optimization, operational efficiency measurement, aviation benchmarking",
+#         "keyword_zh": "航空KPI, 飞机利用率指标, 飞行性能分析, 航空收入优化, 运营效率测量, 航空基准测试",
+#         "priority": "Low",
+#         "description": "Performance measurement and optimization in aviation"
+#     },
+#     {
+#         "category": "Aviation Safety & Compliance",
+#         "keyword_en": "aviation safety management, flight safety software, regulatory compliance aviation, aircraft certification system, aviation insurance platform, safety reporting system",
+#         "keyword_zh": "航空安全管理, 飞行安全软件, 航空监管合规, 飞机认证系统, 航空保险平台, 安全报告系统",
+#         "priority": "Medium",
+#         "description": "Safety and regulatory compliance solutions"
+#     },
+#     {
+#         "category": "Aviation Innovation & Technology Trends",
+#         "keyword_en": "AI aviation solutions, blockchain aircraft records, IoT flight tracking, machine learning aviation, predictive maintenance aviation, digital aviation transformation",
+#         "keyword_zh": "AI航空解决方案, 区块链飞机记录, 物联网飞行跟踪, 机器学习航空, 预测性维护航空, 数字航空转型",
+#         "priority": "Medium",
+#         "description": "Emerging technologies transforming aviation industry"
+#     },
+#     {
+#         "category": "Aviation Industry Pain Points & Solutions",
+#         "keyword_en": "reduce aviation costs, improve aircraft utilization, streamline flight operations, eliminate booking inefficiencies, aviation process optimization, operational bottleneck solutions",
+#         "keyword_zh": "降低航空成本, 提高飞机利用率, 简化飞行运营, 消除预订低效, 航空流程优化, 运营瓶颈解决方案",
+#         "priority": "Medium",
+#         "description": "Solutions to common aviation industry challenges"
+#     },
+#     {
+#         "category": "Aviation Market Intelligence & Competitive Analysis",
+#         "keyword_en": "aviation market trends, competitive aviation analysis, aircraft market data, aviation industry insights, aviation market research, competitor benchmarking aviation",
+#         "keyword_zh": "航空市场趋势, 竞争性航空分析, 飞机市场数据, 航空行业洞察, 航空市场研究, 竞争对手基准航空",
+#         "priority": "Low",
+#         "description": "Market intelligence and competitive analysis for aviation"
+#     },
+#     {
+#         "category": "Aviation Finance & Investment",
+#         "keyword_en": "aviation finance platform, aircraft leasing management, aviation investment analysis, aircraft valuation system, aviation asset management, flight department budgeting",
+#         "keyword_zh": "航空金融平台, 飞机租赁管理, 航空投资分析, 飞机估值系统, 航空资产管理, 飞行部门预算",
+#         "priority": "Low",
+#         "description": "Financial management and investment solutions for aviation"
+#     }
+# ]
+
+keyword_list = [
+    # 会员制与所有权模式
     {
-        "category": "Aviation Platform & Booking Technology",
-        "keyword_en": "private jet booking, charter management platform, aviation SaaS, aircraft sourcing software, broker management system, flight booking automation",
-        "keyword_zh": "私人飞机预订, 包机管理平台, 航空SaaS, 飞机采购软件, 经纪人管理系统, 飞行预订自动化",
+        "category": "Technology Innovation & Digital",
+        "keyword_en": "AI flight optimization private jets, artificial intelligence aviation, machine learning flight planning, automated charter booking, smart aircraft systems",
+        "keyword_zh": "AI航班优化私人飞机",
+        "priority": "Medium",
+        "description": "Technology disruptions transforming charter operations"
+    },
+    {
+        "category": "Membership & Ownership Models",
+        "keyword_en": "Jet card programs, prepaid flight hours, membership aviation, flight card benefits, charter membership plans",
+        "keyword_zh": "飞行卡",
         "priority": "High",
-        "description": "Core platform technology for aviation booking and management"
+        "description": "Strong branded keyword, long-term client interest"
     },
     {
-        "category": "Aviation Data Intelligence & Analytics",
-        "keyword_en": "aviation data platform, flight data API, aircraft market intelligence, aviation business analytics, demand forecasting aviation, pricing intelligence platform",
-        "keyword_zh": "航空数据平台, 飞行数据API, 飞机市场情报, 航空商业分析, 航空需求预测, 定价智能平台",
+        "category": "Luxury Travel Destinations",
+        "keyword_en": "Private island resort, exclusive island getaway, luxury island destination, secluded tropical resort, UHNW island travel",
+        "keyword_zh": "私人岛屿度假村",
+        "priority": "Medium-High",
+        "description": "Appeals to UHNWIs seeking luxury experiences"
+    },
+    {
+        "category": "Specialized Travel Markets",
+        "keyword_en": "Destination wedding travel, luxury wedding flights, bridal party charter, wedding guest transport, celebration jet rental",
+        "keyword_zh": "目的地婚礼",
+        "priority": "Medium-High",
+        "description": "Niche but emotionally resonant travel segment"
+    },
+    {
+        "category": "Membership & Ownership Models",
+        "keyword_en": "Fractional ownership vs charter, aircraft ownership models, shared jet ownership, private aviation comparison, jet ownership alternatives",
+        "keyword_zh": "分时所有权vs包机",
+        "priority": "Medium",
+        "description": "Educational content for consideration-stage audience"
+    },
+    {
+        "category": "Membership & Ownership Models",
+        "keyword_en": "ACMI leasing, wet lease aviation, aircraft crew maintenance insurance, charter operator services, aviation wet rental",
+        "keyword_zh": "湿租",
+        "priority": "Medium",
+        "description": "Relevant for operators and specialized customers"
+    },
+    # 核心业务服务类关键词
+    {
+        "category": "Charter Services Core",
+        "keyword_en": "Private jet charter, executive jet rental, business aviation services, luxury aircraft charter, corporate jet booking",
+        "keyword_zh": "私人包机",
         "priority": "High",
-        "description": "Data-driven insights and market intelligence for aviation industry"
+        "description": "High-intent search, direct alignment with core services"
     },
     {
-        "category": "Aircraft Fleet & Operations Management",
-        "keyword_en": "fleet management software, aircraft availability tracking, empty leg optimization, operator dashboard, aircraft positioning system, fleet utilization analytics",
-        "keyword_zh": "机队管理软件, 飞机可用性跟踪, 空腿优化, 运营商仪表板, 飞机调机系统, 机队利用率分析",
+        "category": "Charter Services Core",
+        "keyword_en": "Empty leg flights, deadhead flights, repositioning flights, one-way charter deals, discounted private jet",
+        "keyword_zh": "空段航班",
         "priority": "High",
-        "description": "Comprehensive fleet and operational management solutions"
+        "description": "Popular and high-converting charter search term"
     },
     {
-        "category": "Aviation Professionals & Stakeholders",
-        "keyword_en": "aviation broker, aircraft operator, flight dispatcher, aviation manager, airline executive, aircraft owner, aviation consultant",
-        "keyword_zh": "航空经纪人, 飞机运营商, 飞行调度员, 航空经理人, 航空公司高管, 飞机所有者, 航空顾问",
+        "category": "Charter Services Core",
+        "keyword_en": "On-demand charter, instant jet booking, last-minute private flights, immediate aircraft availability, urgent charter service",
+        "keyword_zh": "按需包机",
         "priority": "High",
-        "description": "Key aviation industry professionals and decision makers"
+        "description": "Transactional keyword targeting spontaneous bookers"
     },
     {
-        "category": "Geographic Market Focus - Asia Pacific",
-        "keyword_en": "Asia Pacific aviation, Singapore aircraft platform, Hong Kong charter software, APAC aviation technology, Southeast Asia aviation, China business aviation",
-        "keyword_zh": "亚太航空, 新加坡飞机平台, 香港包机软件, 亚太航空技术, 东南亚航空, 中国商务航空",
+        "category": "Charter Services Core",
+        "keyword_en": "Corporate aviation, business jet services, executive aircraft, company plane rental, corporate flight department",
+        "keyword_zh": "公务机",
         "priority": "High",
-        "description": "Regional aviation market penetration in Asia-Pacific"
+        "description": "Appeals to corporate clients and business travelers"
     },
+    
+    
+    
+    # 新兴交通模式
     {
-        "category": "European Aviation Technology",
-        "keyword_en": "European aviation platform, EU aircraft management, Malta aviation software, UK business aviation, European flight operations, Continental aviation system",
-        "keyword_zh": "欧洲航空平台, 欧盟飞机管理, 马耳他航空软件, 英国商务航空, 欧洲飞行运营, 欧洲大陆航空系统",
+        "category": "Emerging Transportation",
+        "keyword_en": "Air taxi, urban air mobility, short-haul flights, regional aviation, city-to-city private transport",
+        "keyword_zh": "空中出租车",
         "priority": "High",
-        "description": "European market focus for aviation technology solutions"
+        "description": "Rising trend in short-distance luxury mobility"
     },
     {
-        "category": "Aviation Business Models & Services",
-        "keyword_en": "charter brokerage, aircraft leasing platform, aviation marketplace, flight aggregator, aircraft sharing economy, aviation fintech, jet card programs",
-        "keyword_zh": "包机经纪, 飞机租赁平台, 航空市场, 飞行聚合器, 飞机共享经济, 航空金融科技, 飞机卡项目",
+        "category": "Emerging Transportation",
+        "keyword_en": "Helicopter transfer, chopper service, rotorcraft transport, helicopter taxi, vertical takeoff aircraft",
+        "keyword_zh": "直升机接驳",
+        "priority": "Medium-High",
+        "description": "Common add-on for private jet travelers"
+    },
+    
+    # 高端旅游目的地
+    
+    {
+        "category": "Luxury Travel Destinations",
+        "keyword_en": "Ultra-luxury resort, five-star resort destination, premium hospitality, exclusive resort access, luxury accommodation packages",
+        "keyword_zh": "超奢华度假村",
+        "priority": "Medium-High",
+        "description": "Luxury-focused travelers often search by destination type"
+    },
+    
+    # 专业旅游细分市场
+    
+    {
+        "category": "Specialized Travel Markets",
+        "keyword_en": "Wellness retreats, luxury spa destinations, health resort travel, rejuvenation getaways, medical tourism private jets",
+        "keyword_zh": "康养度假",
+        "priority": "Medium-High",
+        "description": "Growing trend in affluent wellness travel"
+    },
+    {
+        "category": "Specialized Travel Markets",
+        "keyword_en": "Michelin star dining experiences, gourmet travel, culinary tourism, fine dining destinations, gastronomic adventures",
+        "keyword_zh": "米其林餐饮",
+        "priority": "Medium-High",
+        "description": "Food-focused high-end travel is highly searched"
+    },
+    
+    # 奢华生活方式整合
+    {
+        "category": "Luxury Lifestyle Integration",
+        "keyword_en": "Superyacht charter, mega yacht rental, luxury yacht booking, yacht and jet packages, maritime aviation combo",
+        "keyword_zh": "超级游艇",
+        "priority": "Medium-High",
+        "description": "Luxury lifestyle tie-in, high net worth appeal"
+    },
+    
+    # 基础设施与地面服务
+    {
+        "category": "Infrastructure & Ground Services",
+        "keyword_en": "FBO expansion Asia, fixed base operator growth, private aviation infrastructure, Asia Pacific FBO development, regional aviation hubs",
+        "keyword_zh": "亚洲FBO扩张",
+        "priority": "Medium",
+        "description": "Authoritative regional SEO targeting for FBOs"
+    },
+    {
+        "category": "Infrastructure & Ground Services",
+        "keyword_en": "Luxury FBO lounges, premium terminal services, executive airport facilities, VIP aviation lounges, private jet terminals",
+        "keyword_zh": "奢华FBO休息室",
+        "priority": "Medium",
+        "description": "Builds brand trust and regional positioning"
+    },
+    
+    # 可持续发展与环保
+    {
+        "category": "Sustainability & Environmental",
+        "keyword_en": "SAF availability airports, sustainable aviation fuel, biofuel private jets, green aviation fuel, carbon neutral flights",
+        "keyword_zh": "可持续航空燃料",
+        "priority": "Medium",
+        "description": "Sustainability content that supports brand values"
+    },
+    {
+        "category": "Sustainability & Environmental",
+        "keyword_en": "Carbon offset private aviation, net zero private jets, environmental impact luxury travel, green aviation initiatives, climate conscious flying",
+        "keyword_zh": "私人航空碳抵消",
+        "priority": "Medium-High",
+        "description": "Environmental regulations affecting luxury travel choices"
+    },
+    
+    # 地缘政治与监管影响
+    {
+        "category": "Geopolitical & Regulatory Impact",
+        "keyword_en": "Private jet sanctions impact, aviation sanctions Russia, oligarch aircraft seizure, political flight restrictions, diplomatic aviation bans",
+        "keyword_zh": "私人飞机制裁影响",
         "priority": "High",
-        "description": "Diverse aviation business models and service approaches"
+        "description": "Real-time political developments affecting private aviation access"
     },
     {
-        "category": "Aviation Technology Integration",
-        "keyword_en": "aviation API integration, FBO connectivity, fuel management API, aviation ecosystem platform, aircraft data sharing, flight planning integration",
-        "keyword_zh": "航空API集成, FBO连接, 燃油管理API, 航空生态平台, 飞机数据共享, 飞行计划集成",
-        "priority": "Medium",
-        "description": "Technical integration and partnership solutions"
+        "category": "Geopolitical & Regulatory Impact",
+        "keyword_en": "Cross-border aviation restrictions, international flight permissions, visa requirements private jets, customs private aviation, border control aircraft",
+        "keyword_zh": "跨境航空限制",
+        "priority": "High",
+        "description": "Border policy changes impacting international private flights"
     },
     {
-        "category": "Middle East & Gulf Aviation Markets",
-        "keyword_en": "Gulf aviation software, UAE aircraft platform, MENA aviation technology, Dubai aviation system, Qatar flight management, Saudi business aviation",
-        "keyword_zh": "海湾航空软件, 阿联酋飞机平台, 中东北非航空技术, 迪拜航空系统, 卡塔尔飞行管理, 沙特商务航空",
-        "priority": "Medium",
-        "description": "Strategic focus on Middle Eastern aviation markets"
+        "category": "Geopolitical & Regulatory Impact",
+        "keyword_en": "War zone private jet restrictions, military conflict flight bans, combat area aviation, wartime flight restrictions, conflict zone aircraft",
+        "keyword_zh": "战区私人飞机限制",
+        "priority": "High",
+        "description": "Military conflicts affecting private aviation routing"
+    },
+    
+    # 危机应对与紧急服务
+    {
+        "category": "Crisis Response & Emergency Services",
+        "keyword_en": "Hurricane private jet evacuation, storm aircraft relocation, weather emergency flights, natural disaster aviation, extreme weather charter",
+        "keyword_zh": "飓风私人飞机疏散",
+        "priority": "High",
+        "description": "Extreme weather events driving emergency charter demand"
     },
     {
-        "category": "Aviation Industry Segments",
-        "keyword_en": "corporate aviation, luxury charter, cargo aviation, helicopter operations, medical flights, government aviation, airline operations, general aviation",
-        "keyword_zh": "企业航空, 豪华包机, 货运航空, 直升机运营, 医疗航班, 政府航空, 航空公司运营, 通用航空",
-        "priority": "Medium",
-        "description": "Specialized aviation market segments and verticals"
+        "category": "Crisis Response & Emergency Services",
+        "keyword_en": "Airport closure flight diversions, weather delays private aviation, runway closures, alternate airport routing, meteorological flight restrictions",
+        "keyword_zh": "机场关闭航班改航",
+        "priority": "Medium-High",
+        "description": "Weather-related disruptions affecting private aviation operations"
     },
     {
-        "category": "Aviation Operational Solutions",
-        "keyword_en": "flight scheduling software, crew management system, aircraft maintenance platform, dispatch optimization, ground handling system, aviation workflow automation",
-        "keyword_zh": "飞行调度软件, 机组管理系统, 飞机维护平台, 调度优化, 地面服务系统, 航空工作流自动化",
-        "priority": "Medium",
-        "description": "Operational efficiency solutions across aviation touchpoints"
+        "category": "Crisis Response & Emergency Services",
+        "keyword_en": "Private aviation security threats, aircraft hijacking prevention, aviation terrorism risk, flight security measures, private jet safety protocols",
+        "keyword_zh": "私人航空安全威胁",
+        "priority": "Medium-High",
+        "description": "Security incidents impacting private flight operations"
+    },
+    
+    # 医疗与健康服务
+    {
+        "category": "Medical & Health Services",
+        "keyword_en": "Medical evacuation private jet, air ambulance services, emergency medical transport, critical patient flights, hospital aircraft transfer",
+        "keyword_zh": "医疗疏散私人飞机",
+        "priority": "High",
+        "description": "Health emergencies driving specialized charter demand"
     },
     {
-        "category": "Aviation Customer & Sales Management",
-        "keyword_en": "aviation CRM, customer portal aviation, aviation sales platform, flight booking experience, aviation mobile app, passenger service system",
-        "keyword_zh": "航空CRM, 航空客户门户, 航空销售平台, 飞行预订体验, 航空移动应用, 乘客服务系统",
-        "priority": "Medium",
-        "description": "Customer relationship and sales management for aviation"
+        "category": "Medical & Health Services",
+        "keyword_en": "VIP patient transport services, luxury medical flights, private healthcare aviation, executive medical transport, premium patient transfer",
+        "keyword_zh": "VIP病患运输服务",
+        "priority": "Medium-High",
+        "description": "High-end medical transport for wealthy patients requiring privacy and comfort"
+    },
+    
+    # 经济市场动态
+    {
+        "category": "Economic Market Dynamics",
+        "keyword_en": "Private jet market recession impact, luxury aviation economic downturn, charter demand crisis, aviation market volatility, economic uncertainty flights",
+        "keyword_zh": "私人飞机市场经济衰退影响",
+        "priority": "High",
+        "description": "Economic downturns affecting luxury aviation demand"
     },
     {
-        "category": "Aviation Performance & Analytics",
-        "keyword_en": "aviation KPIs, aircraft utilization metrics, flight performance analytics, aviation revenue optimization, operational efficiency measurement, aviation benchmarking",
-        "keyword_zh": "航空KPI, 飞机利用率指标, 飞行性能分析, 航空收入优化, 运营效率测量, 航空基准测试",
-        "priority": "Low",
-        "description": "Performance measurement and optimization in aviation"
+        "category": "Economic Market Dynamics",
+        "keyword_en": "New wealth millionaires private jet demand, crypto wealth aviation, tech IPO private flights, startup founders aircraft, emerging rich charter market",
+        "keyword_zh": "新富阶层百万富翁私人飞机需求",
+        "priority": "Medium-High",
+        "description": "Emerging wealth sources including crypto, tech IPOs, and new millionaires driving charter market expansion"
     },
-    {
-        "category": "Aviation Safety & Compliance",
-        "keyword_en": "aviation safety management, flight safety software, regulatory compliance aviation, aircraft certification system, aviation insurance platform, safety reporting system",
-        "keyword_zh": "航空安全管理, 飞行安全软件, 航空监管合规, 飞机认证系统, 航空保险平台, 安全报告系统",
-        "priority": "Medium",
-        "description": "Safety and regulatory compliance solutions"
-    },
-    {
-        "category": "Aviation Innovation & Technology Trends",
-        "keyword_en": "AI aviation solutions, blockchain aircraft records, IoT flight tracking, machine learning aviation, predictive maintenance aviation, digital aviation transformation",
-        "keyword_zh": "AI航空解决方案, 区块链飞机记录, 物联网飞行跟踪, 机器学习航空, 预测性维护航空, 数字航空转型",
-        "priority": "Medium",
-        "description": "Emerging technologies transforming aviation industry"
-    },
-    {
-        "category": "Aviation Industry Pain Points & Solutions",
-        "keyword_en": "reduce aviation costs, improve aircraft utilization, streamline flight operations, eliminate booking inefficiencies, aviation process optimization, operational bottleneck solutions",
-        "keyword_zh": "降低航空成本, 提高飞机利用率, 简化飞行运营, 消除预订低效, 航空流程优化, 运营瓶颈解决方案",
-        "priority": "Medium",
-        "description": "Solutions to common aviation industry challenges"
-    },
-    {
-        "category": "Aviation Market Intelligence & Competitive Analysis",
-        "keyword_en": "aviation market trends, competitive aviation analysis, aircraft market data, aviation industry insights, aviation market research, competitor benchmarking aviation",
-        "keyword_zh": "航空市场趋势, 竞争性航空分析, 飞机市场数据, 航空行业洞察, 航空市场研究, 竞争对手基准航空",
-        "priority": "Low",
-        "description": "Market intelligence and competitive analysis for aviation"
-    },
-    {
-        "category": "Aviation Finance & Investment",
-        "keyword_en": "aviation finance platform, aircraft leasing management, aviation investment analysis, aircraft valuation system, aviation asset management, flight department budgeting",
-        "keyword_zh": "航空金融平台, 飞机租赁管理, 航空投资分析, 飞机估值系统, 航空资产管理, 飞行部门预算",
-        "priority": "Low",
-        "description": "Financial management and investment solutions for aviation"
-    }
+    
+    # 技术创新与数字化
+    
 ]
-
-
 
 news_schema = {
    "name": "news_extraction",
@@ -222,7 +462,8 @@ Your service company: Avi-Go,The Largest Data & Charter Marketplace Platform for
 As a professional SEO expert, you should have the following professional qualities and steps:
 1: You need to have sharp insight and apply internet marketing or advertising operations mindset to identify the most compelling breaking news, industry dynamics, and trending topics that can attract user engagement. Consider how to naturally connect these elements with your brand, then distill them into relevant keywords.
 2. You should not limit yourself to one country, pay attention to keyword trends, and consider keyword difficulty, content length, relevance, and search intent.
-3. The article intention can be classified - Transactional (e.g. "book private jet Singapore"), - Informational (e.g. "how does private jet charter work"), - Localised (e.g. "private jet Bangkok to Singapore"), - Navigational (e.g. brand or platform name searches)
+3. The article intention can be classified - Transactional (e.g. "private jet booking platform"), - Informational (e.g. "charter operator/ops software"), - Localised (e.g. "private jet Bangkok to Singapore"), - Navigational (e.g. brand or platform name searches)
+4. The keywords
 
 Workflow;
 Step1: Comprehend all news content, identify current news hotspots, and determine a singular article intention classification based on comprehensive global analysis.
