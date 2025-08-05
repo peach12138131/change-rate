@@ -336,6 +336,8 @@ def auto_write_article(news_list):
 
             news_pool.append(extract_news["news_list"])
 
+           
+
             
 
          #去对news_pool进行去重
@@ -444,15 +446,6 @@ def auto_write_article(news_list):
                             f.write(final_seo_article)
 
 
-                        # 保存SVG文件 - 关键代码就这几行
-                        svg_text = query_gpt_model(generate_svg_prompt, rewritten_article, claude_key)
-                        svg_codes=extract_svg_from_text(svg_text)
-                        for idx, svg_code in enumerate(svg_codes):
-                            svg_filename = f"{output_dir}/chart_{batch_count + 1}_{timestamp}_{idx+1}.svg"
-                            with open(svg_filename, 'w', encoding='utf-8') as f:
-                                f.write(svg_code)
-                            print(f"[成功] SVG已保存: {svg_filename}")
-                        
 
                         # 同时保存原始研究内容
                         raw_filename = f"{output_dir}/raw_research_{batch_count + 1}_{timestamp}.txt"
