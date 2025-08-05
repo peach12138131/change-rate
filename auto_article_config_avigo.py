@@ -40,136 +40,7 @@ Directly output the rewritten content without any explanations or annotations.
 Please recreate this content as an authentic human website article editor.
 """
 
-    
-# enhanced_aviation_keyword_list = [
-#     {
-#         "category": "Aviation Platform & Booking Technology",
-#         "keyword_en": "private jet booking, charter management platform, aviation SaaS, aircraft sourcing software, broker management system, flight booking automation",
-#         "keyword_zh": "私人飞机预订, 包机管理平台, 航空SaaS, 飞机采购软件, 经纪人管理系统, 飞行预订自动化",
-#         "priority": "High",
-#         "description": "Core platform technology for aviation booking and management"
-#     },
-#     {
-#         "category": "Aviation Data Intelligence & Analytics",
-#         "keyword_en": "aviation data platform, flight data API, aircraft market intelligence, aviation business analytics, demand forecasting aviation, pricing intelligence platform",
-#         "keyword_zh": "航空数据平台, 飞行数据API, 飞机市场情报, 航空商业分析, 航空需求预测, 定价智能平台",
-#         "priority": "High",
-#         "description": "Data-driven insights and market intelligence for aviation industry"
-#     },
-#     {
-#         "category": "Aircraft Fleet & Operations Management",
-#         "keyword_en": "fleet management software, aircraft availability tracking, empty leg optimization, operator dashboard, aircraft positioning system, fleet utilization analytics",
-#         "keyword_zh": "机队管理软件, 飞机可用性跟踪, 空腿优化, 运营商仪表板, 飞机调机系统, 机队利用率分析",
-#         "priority": "High",
-#         "description": "Comprehensive fleet and operational management solutions"
-#     },
-#     {
-#         "category": "Aviation Professionals & Stakeholders",
-#         "keyword_en": "aviation broker, aircraft operator, flight dispatcher, aviation manager, airline executive, aircraft owner, aviation consultant",
-#         "keyword_zh": "航空经纪人, 飞机运营商, 飞行调度员, 航空经理人, 航空公司高管, 飞机所有者, 航空顾问",
-#         "priority": "High",
-#         "description": "Key aviation industry professionals and decision makers"
-#     },
-#     {
-#         "category": "Geographic Market Focus - Asia Pacific",
-#         "keyword_en": "Asia Pacific aviation, Singapore aircraft platform, Hong Kong charter software, APAC aviation technology, Southeast Asia aviation, China business aviation",
-#         "keyword_zh": "亚太航空, 新加坡飞机平台, 香港包机软件, 亚太航空技术, 东南亚航空, 中国商务航空",
-#         "priority": "High",
-#         "description": "Regional aviation market penetration in Asia-Pacific"
-#     },
-#     {
-#         "category": "European Aviation Technology",
-#         "keyword_en": "European aviation platform, EU aircraft management, Malta aviation software, UK business aviation, European flight operations, Continental aviation system",
-#         "keyword_zh": "欧洲航空平台, 欧盟飞机管理, 马耳他航空软件, 英国商务航空, 欧洲飞行运营, 欧洲大陆航空系统",
-#         "priority": "High",
-#         "description": "European market focus for aviation technology solutions"
-#     },
-#     {
-#         "category": "Aviation Business Models & Services",
-#         "keyword_en": "charter brokerage, aircraft leasing platform, aviation marketplace, flight aggregator, aircraft sharing economy, aviation fintech, jet card programs",
-#         "keyword_zh": "包机经纪, 飞机租赁平台, 航空市场, 飞行聚合器, 飞机共享经济, 航空金融科技, 飞机卡项目",
-#         "priority": "High",
-#         "description": "Diverse aviation business models and service approaches"
-#     },
-#     {
-#         "category": "Aviation Technology Integration",
-#         "keyword_en": "aviation API integration, FBO connectivity, fuel management API, aviation ecosystem platform, aircraft data sharing, flight planning integration",
-#         "keyword_zh": "航空API集成, FBO连接, 燃油管理API, 航空生态平台, 飞机数据共享, 飞行计划集成",
-#         "priority": "Medium",
-#         "description": "Technical integration and partnership solutions"
-#     },
-#     {
-#         "category": "Middle East & Gulf Aviation Markets",
-#         "keyword_en": "Gulf aviation software, UAE aircraft platform, MENA aviation technology, Dubai aviation system, Qatar flight management, Saudi business aviation",
-#         "keyword_zh": "海湾航空软件, 阿联酋飞机平台, 中东北非航空技术, 迪拜航空系统, 卡塔尔飞行管理, 沙特商务航空",
-#         "priority": "Medium",
-#         "description": "Strategic focus on Middle Eastern aviation markets"
-#     },
-#     {
-#         "category": "Aviation Industry Segments",
-#         "keyword_en": "corporate aviation, luxury charter, cargo aviation, helicopter operations, medical flights, government aviation, airline operations, general aviation",
-#         "keyword_zh": "企业航空, 豪华包机, 货运航空, 直升机运营, 医疗航班, 政府航空, 航空公司运营, 通用航空",
-#         "priority": "Medium",
-#         "description": "Specialized aviation market segments and verticals"
-#     },
-#     {
-#         "category": "Aviation Operational Solutions",
-#         "keyword_en": "flight scheduling software, crew management system, aircraft maintenance platform, dispatch optimization, ground handling system, aviation workflow automation",
-#         "keyword_zh": "飞行调度软件, 机组管理系统, 飞机维护平台, 调度优化, 地面服务系统, 航空工作流自动化",
-#         "priority": "Medium",
-#         "description": "Operational efficiency solutions across aviation touchpoints"
-#     },
-#     {
-#         "category": "Aviation Customer & Sales Management",
-#         "keyword_en": "aviation CRM, customer portal aviation, aviation sales platform, flight booking experience, aviation mobile app, passenger service system",
-#         "keyword_zh": "航空CRM, 航空客户门户, 航空销售平台, 飞行预订体验, 航空移动应用, 乘客服务系统",
-#         "priority": "Medium",
-#         "description": "Customer relationship and sales management for aviation"
-#     },
-#     {
-#         "category": "Aviation Performance & Analytics",
-#         "keyword_en": "aviation KPIs, aircraft utilization metrics, flight performance analytics, aviation revenue optimization, operational efficiency measurement, aviation benchmarking",
-#         "keyword_zh": "航空KPI, 飞机利用率指标, 飞行性能分析, 航空收入优化, 运营效率测量, 航空基准测试",
-#         "priority": "Low",
-#         "description": "Performance measurement and optimization in aviation"
-#     },
-#     {
-#         "category": "Aviation Safety & Compliance",
-#         "keyword_en": "aviation safety management, flight safety software, regulatory compliance aviation, aircraft certification system, aviation insurance platform, safety reporting system",
-#         "keyword_zh": "航空安全管理, 飞行安全软件, 航空监管合规, 飞机认证系统, 航空保险平台, 安全报告系统",
-#         "priority": "Medium",
-#         "description": "Safety and regulatory compliance solutions"
-#     },
-#     {
-#         "category": "Aviation Innovation & Technology Trends",
-#         "keyword_en": "AI aviation solutions, blockchain aircraft records, IoT flight tracking, machine learning aviation, predictive maintenance aviation, digital aviation transformation",
-#         "keyword_zh": "AI航空解决方案, 区块链飞机记录, 物联网飞行跟踪, 机器学习航空, 预测性维护航空, 数字航空转型",
-#         "priority": "Medium",
-#         "description": "Emerging technologies transforming aviation industry"
-#     },
-#     {
-#         "category": "Aviation Industry Pain Points & Solutions",
-#         "keyword_en": "reduce aviation costs, improve aircraft utilization, streamline flight operations, eliminate booking inefficiencies, aviation process optimization, operational bottleneck solutions",
-#         "keyword_zh": "降低航空成本, 提高飞机利用率, 简化飞行运营, 消除预订低效, 航空流程优化, 运营瓶颈解决方案",
-#         "priority": "Medium",
-#         "description": "Solutions to common aviation industry challenges"
-#     },
-#     {
-#         "category": "Aviation Market Intelligence & Competitive Analysis",
-#         "keyword_en": "aviation market trends, competitive aviation analysis, aircraft market data, aviation industry insights, aviation market research, competitor benchmarking aviation",
-#         "keyword_zh": "航空市场趋势, 竞争性航空分析, 飞机市场数据, 航空行业洞察, 航空市场研究, 竞争对手基准航空",
-#         "priority": "Low",
-#         "description": "Market intelligence and competitive analysis for aviation"
-#     },
-#     {
-#         "category": "Aviation Finance & Investment",
-#         "keyword_en": "aviation finance platform, aircraft leasing management, aviation investment analysis, aircraft valuation system, aviation asset management, flight department budgeting",
-#         "keyword_zh": "航空金融平台, 飞机租赁管理, 航空投资分析, 飞机估值系统, 航空资产管理, 飞行部门预算",
-#         "priority": "Low",
-#         "description": "Financial management and investment solutions for aviation"
-#     }
-# ]
-
+ 
 keyword_list = [
     # 会员制与所有权模式
     {
@@ -534,26 +405,30 @@ seo_rewrite_prompt = """
 Output Language: English
 
 ## Main Task
-Reorganize AI-collected information and write articles according to the provided SEO format, forming website articles with  human editorial characteristics, while maintaining original information and viewpoints.
+Reorganize AI-collected information and write articles according to the provided SEO format, forming website articles with human editorial characteristics, while maintaining original information and viewpoints. And improve the article's readability since your article's target audience is ordinary non-professionals, and the sentence difficulty should be at a Grade 6–8 reading level that can be read fluently.
 
 ## Workflow
 1. Carefully read and understand the core information and viewpoints in the AI-collected input news, organize scattered knowledge points into complete coherent articles.
-2. Retain core information, strictly maintain the format of original images and tables, and must cite source URLs in IEEE format.
+2. Retain core information and must cite source URLs in fixed format:<title of news article>, <company name/publisher> Available at: <link>
 3. Follow the provided SEO format and start rewriting and expanding more content as a real human author:
    - Use reasonable logic to connect scattered news and viewpoints, editing them into complete coherent articles
    - Add some subtle logical jumps but professional viewpoints
    - Avoid using too many long complex sentences. Use simple sentences, data, and examples for better readability and credibility.
-   - Follow the header regulations in the format and naturally integrate keywords into the article
+   - Follow the header regulations in the format and naturally integrate keywords into the article,Ensure keywords appear within the first 100 words, with an overall density of 1-1.5%, and avoid keyword stuffing.
 4. Ensure the rewritten content maintains the core information and viewpoints of the original text, but has completely different expression styles.
-5. Use third-person perspective or third-person narration in writing to show professionalism
-6. Review the rewritten content to ensure it reads like the natural expression of a real professional expert.
+5. Use third-person perspective or third-person narration in writing 
+6. Review the article's paragraphs, sentences, and words to improve readability
+    - Reading difficulty should meet a 11-14 year old reading level for fluent reading
+    - Avoid using obscure words and reduce the frequency of multi-syllable words. Simplify or define industry terms, and add annotations or vivid explanations when terms are first encountered
+    - Sentence length should not be too long; avoid complex sentences with more than 25 words
+    - Paragraphs should not contain too many sentences; average 2-4 sentences per paragraph, with content divided into chunks for easy reading
 7. Control the main text output to 800-1500 words, FAQ Post is not counted in the main text
 
 ## Important Notes
-- Add some slight imperfections, such as colloquial expressions or slight grammatical irregularities
 - Avoid overly perfect or structured expressions
-- Use third-person perspective or third-person narration in writing to show professionalism
-- Your readers are ordinary people, so steer clear of complicated technical terms.
+- Use third-person perspective or third-person narration in writing
+- Avoid overly long sentences, use simple sentences, words, and examples to improve readability and lower the reading barrier of the article.
+
 
 ## Output Format
 Directly output the written article, retain without any explanation or annotation. The final output should include: HTML Meta Tags (include Meta Title, Meta Description, URL Slug, Header), written article
@@ -563,6 +438,7 @@ Please write this content as a real human website article editor.
 Collected article materials: {0}
 SEO strategy format: {1}
 """
+
 
 seo_link="""
 # Role: Human AVI-GO Website Article Editor
@@ -581,6 +457,7 @@ As a AVI-GO website editor, you need to read the currently written article, anal
 - Entry points must be natural, control integration frequency not too high, 1-3 times.
 - Reduce the frequency of competitor company appearances,but can not change the original viewpoints
 - Cannot modify any original article structure, cannot significantly add or delete original article content
+- Use active voice to introduce company content (e.g., Avi-Go ...)
 
 ## Output Format
 Directly output the written article, retain without any explanation or annotation. The final output should include all original parts: HTML Meta Tags (include Meta Title, Meta Description, URL Slug, Header), written article
