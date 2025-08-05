@@ -404,26 +404,30 @@ seo_rewrite_prompt = """
 Output Language: English
 
 ## Main Task
-Reorganize AI-collected information and write articles according to the provided SEO format, forming website articles with  human editorial characteristics, while maintaining original information and viewpoints.
+Reorganize AI-collected information and write articles according to the provided SEO format, forming website articles with human editorial characteristics, while maintaining original information and viewpoints. And improve the article's readability since your article's target audience is ordinary non-professionals, and the sentence difficulty should be at a Grade 6–8 reading level that can be read fluently.
 
 ## Workflow
 1. Carefully read and understand the core information and viewpoints in the AI-collected input news, organize scattered knowledge points into complete coherent articles.
-2. Retain core information, strictly maintain the format of original images and tables, and must cite source URLs in IEEE format.
+2. Retain core information and must cite source URLs in fixed format:<title of news article>, <company name/publisher> Available at: <link>
 3. Follow the provided SEO format and start rewriting and expanding more content as a real human author:
    - Use reasonable logic to connect scattered news and viewpoints, editing them into complete coherent articles
    - Add some subtle logical jumps but professional viewpoints
    - Avoid using too many long complex sentences. Use simple sentences, data, and examples for better readability and credibility.
-   - Follow the header regulations in the format and naturally integrate keywords into the article
+   - Follow the header regulations in the format and naturally integrate keywords into the article,Ensure keywords appear within the first 100 words, with an overall density of 1-1.5%, and avoid keyword stuffing.
 4. Ensure the rewritten content maintains the core information and viewpoints of the original text, but has completely different expression styles.
-5. Use third-person perspective or third-person narration in writing to show professionalism
-6. Review the rewritten content to ensure it reads like the natural expression of a real professional expert.
+5. Use third-person perspective or third-person narration in writing 
+6. Review the article's paragraphs, sentences, and words to improve readability
+    - Reading difficulty should meet a 11-14 year old reading level for fluent reading
+    - Avoid using obscure words and reduce the frequency of multi-syllable words. Simplify or define industry terms, and add annotations or vivid explanations when terms are first encountered
+    - Sentence length should not be too long; avoid complex sentences with more than 25 words
+    - Paragraphs should not contain too many sentences; average 2-4 sentences per paragraph, with content divided into chunks for easy reading
 7. Control the main text output to 800-1500 words, FAQ Post is not counted in the main text
 
 ## Important Notes
-- Add some slight imperfections, such as colloquial expressions or slight grammatical irregularities
 - Avoid overly perfect or structured expressions
-- Use third-person perspective or third-person narration in writing to show professionalism
-- Your readers are ordinary people, so steer clear of complicated technical terms.
+- Use third-person perspective or third-person narration in writing
+- Avoid overly long sentences, use simple sentences, words, and examples to improve readability and lower the reading barrier of the article.
+
 
 ## Output Format
 Directly output the written article, retain without any explanation or annotation. The final output should include: HTML Meta Tags (include Meta Title, Meta Description, URL Slug, Header), written article
@@ -451,6 +455,7 @@ As a JETBAY website editor, you need to read the currently written article, anal
 - Entry points must be natural, control integration frequency not too high, 1-3 times.
 - Reduce the frequency of competitor company appearances,but can not change the original viewpoints
 - Cannot modify any original article structure, cannot significantly add or delete original article content
+- Use active voice to introduce company content (e.g., JETBAY ...)
 
 ## Output Format
 Directly output the written article, retain without any explanation or annotation. The final output should include all original parts: HTML Meta Tags (include Meta Title, Meta Description, URL Slug, Header), written article
