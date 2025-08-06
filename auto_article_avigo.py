@@ -309,12 +309,12 @@ def auto_write_article(news_list):
 
            
             print("筛选新闻中")
-            extract_query =f"""Current time {date_str}. 
+            extract_query =f""" Current date {date_str}. 
                                 Please extract the news that most relevant to private charter topic about from the following news results.
                                 Important Note:
                                 1.the news content should be related 
                                 2.Try choose diverse sources
-                                3.Filter out the news too old 
+                                3.Filter out the news too old, such as filter those are 3 months ago
                                 4.Filter out news from which it's difficult to obtain useful information,such as those that are too short, too old, or irrelevant.
                                 """
             
@@ -326,6 +326,9 @@ def auto_write_article(news_list):
             
 
             news_pool.append(extract_news["news_list"])
+
+            if i==2:
+                break
 
     
 
@@ -397,12 +400,12 @@ def auto_write_article(news_list):
                     
                     
                     #seo改写流程1，提取关键字
-                    keywords_prompt=seo_keywords.format(rewritten_article)
+                    keywords_prompt=seo_keywords.format(final_report)
                     keywords=query_gpt_model(keywords_prompt, "", claude_key, temperature=1.0)
 
 
                     #2生成metadata
-                    metadata_prompt=seo_metadata.format(rewritten_article,keywords)
+                    metadata_prompt=seo_metadata.format(f"{date_str} Recent News"+final_report,keywords)
                     metadata=query_gpt_model(metadata_prompt, "", claude_key, temperature=1.0)
 
                     #3重写
