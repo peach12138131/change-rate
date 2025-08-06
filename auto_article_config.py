@@ -415,17 +415,16 @@ Reorganize AI-collected information and write articles according to the provided
    - Avoid using too many long complex sentences. Use simple sentences, data, and examples for better readability and credibility.
    - Follow the header regulations in the format and naturally integrate keywords into the article,Ensure keywords appear within the first 100 words, with an overall density of 1-1.5%, and avoid keyword stuffing.
 4. Ensure the rewritten content maintains the core information and viewpoints of the original text, but has completely different expression styles.
-5. Use third-person perspective or third-person narration in writing 
-6. Review the article's paragraphs, sentences, and words to improve readability
+5. Review the article's paragraphs, sentences, and words to improve readability
     - Reading difficulty should meet a 11-14 year old reading level for fluent reading
     - Avoid using obscure words and reduce the frequency of multi-syllable words. Simplify or define industry terms, and add annotations or vivid explanations when terms are first encountered
     - Sentence length should not be too long; avoid complex sentences with more than 25 words
     - Paragraphs should not contain too many sentences; average 2-4 sentences per paragraph, with content divided into chunks for easy reading
-7. Control the main text output to 800-1500 words, FAQ Post is not counted in the main text
+6. Control the main text output to 800-1500 words, FAQ Post is not counted in the main text
 
 ## Important Notes
 - Avoid overly perfect or structured expressions
-- Use third-person perspective or third-person narration in writing
+- Use third-person perspective or third-person narration in writing 
 - Avoid overly long sentences, use simple sentences, words, and examples to improve readability and lower the reading barrier of the article.
 
 
