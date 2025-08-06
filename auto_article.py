@@ -329,12 +329,14 @@ def auto_write_article(news_list):
                                 """
             extract_news = query_openai_model(extract_query,news_results,openai_key,json_schema=news_schema)
 
-            print(extract_news)
+           
             extract_news=json.loads(extract_news)
-            print(extract_news["news_list"])
+           
             
 
             news_pool.append(extract_news["news_list"])
+
+            
 
            
 
@@ -384,7 +386,7 @@ def auto_write_article(news_list):
                     end_idx = start_idx + batch_size
                     print(f"\n处理第 {batch_count + 1} 批次：索引 {start_idx}-{end_idx-1} ({batch_size} 条新闻)")
                     batch_news = news_list[start_idx:end_idx]
-                    final_report = ""
+                    final_report = "" #这里是news
                     for new in enumerate(batch_news):
                         final_report += f"{new}\n\n"
                     
@@ -405,12 +407,12 @@ def auto_write_article(news_list):
                     
                     
                     #seo改写流程1，提取关键字
-                    keywords_prompt=seo_keywords.format(rewritten_article)
+                    keywords_prompt=seo_keywords.format(final_report)
                     keywords=query_gpt_model(keywords_prompt, "", claude_key, temperature=1.0)
 
 
                     #2生成metadata
-                    metadata_prompt=seo_metadata.format(rewritten_article,keywords)
+                    metadata_prompt=seo_metadata.format(f"{date_str} Recent News"+final_report,keywords)
                     metadata=query_gpt_model(metadata_prompt, "", claude_key, temperature=1.0)
 
                     #3重写
