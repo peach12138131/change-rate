@@ -327,8 +327,7 @@ def auto_write_article(news_list):
 
             news_pool.append(extract_news["news_list"])
 
-            if i==2:
-                break
+            
 
     
 
